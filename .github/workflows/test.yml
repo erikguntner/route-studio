@@ -14,5 +14,5 @@ jobs:
       - name: E2E Tests
         uses: cypress-io/github-action@v2
         with:
-          start: yarn start
+          start: yarn dev
           wait-on: 'http://localhost:3000'
