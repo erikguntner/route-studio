@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint . --ext ts --ext tsx",
+    "lint": "eslint . --ext ts --ext tsx --max-warnings 0",
     "lint-fix": "eslint . --ext ts --ext tsx --fix",
     "cypress": "cypress open",
     "test": "jest --env=jsdom",
