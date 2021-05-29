@@ -1,9 +1,6 @@
 import type {AppProps} from 'next/app';
-import {
-  createGlobalStyle,
-  ThemeProvider,
-  DefaultTheme,
-} from 'styled-components';
+import {createGlobalStyle, ThemeProvider} from 'styled-components';
+import {theme} from '../utils/theme';
 
 const GlobalStyle = createGlobalStyle`
   html,
@@ -24,12 +21,6 @@ const GlobalStyle = createGlobalStyle`
     position: relative;
   }
 `;
-
-const theme: DefaultTheme = {
-  colors: {
-    primary: '#0070f3',
-  },
-};
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
