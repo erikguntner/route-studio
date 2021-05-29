@@ -1,11 +1,12 @@
-import {render} from '@testing-library/react';
+import {render, screen} from '../utils/test/test-utils';
 import Home from '../pages/index';
 
 describe('Home Page', () => {
   it('Renders the header', () => {
-    const {getByRole} = render(<Home />);
-    expect(getByRole('heading', {level: 1})).toHaveTextContent(
-      /Welcome to Next.js/i,
-    );
+    render(<Home />);
+
+    expect(
+      screen.getByRole('heading', {name: /Welcome to Next.js/i, level: 1}),
+    ).toBeInTheDocument();
   });
 });
