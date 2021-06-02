@@ -1,7 +1,10 @@
 import Head from 'next/head';
 import styled from 'styled-components';
+import {signIn, signOut, useSession} from 'next-auth/client';
 
 export default function Home() {
+  const [session] = useSession();
+
   return (
     <Container>
       <Head>
@@ -11,9 +14,20 @@ export default function Home() {
       </Head>
 
       <main>
-        <Title>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </Title>
+        {!session ? (
+          <>
+            <div>Not signed in</div>
+            <button onClick={signIn}>Sign In</button>
+          </>
+        ) : (
+          <>
+            <Title>
+              Welcome to <a href="https://nextjs.org">Next.js!</a>
+            </Title>
+            <p>Signed In as {session.user?.email}</p>
+            <button onClick={signOut}></button>
+          </>
+        )}
       </main>
 
       <footer>

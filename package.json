@@ -21,8 +21,10 @@
   },
   "dependencies": {
     "next": "10.2.3",
+    "next-auth": "^3.24.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "sqlite3": "^5.0.2",
     "styled-components": "^5.3.0"
   },
   "devDependencies": {
