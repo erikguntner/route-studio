@@ -1,12 +1,12 @@
 import {NextApiRequest, NextApiResponse} from 'next';
-import NextAuth from 'next-auth';
+import NextAuth, {NextAuthOptions} from 'next-auth';
 import Providers from 'next-auth/providers';
 import {PrismaAdapter} from '@next-auth/prisma-adapter';
 import {PrismaClient} from '@prisma/client';
 
 const prisma = new PrismaClient();
 
-const options = {
+const options: NextAuthOptions = {
   providers: [
     Providers.Email({
       server: {
@@ -25,6 +25,10 @@ const options = {
     }),
   ],
   adapter: PrismaAdapter(prisma),
+  pages: {
+    signIn: '/auth/signin',
+    verifyRequest: '/auth/verify-request',
+  },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) =>

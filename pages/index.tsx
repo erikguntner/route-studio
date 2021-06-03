@@ -3,7 +3,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import {signIn, signOut, useSession} from 'next-auth/client';
 import {GetServerSideProps} from 'next';
-import prisma from '../utils/db';
+// import prisma from '../utils/db';
 
 export default function Home() {
   const [session] = useSession();
@@ -16,40 +16,42 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        {!session ? (
-          <>
-            <div>Not signed in</div>
-            <a
-              href="/api/auth/signin"
-              onClick={e => {
-                e.preventDefault();
-                signIn();
-              }}
-            >
-              Sign In
-            </a>
-          </>
-        ) : (
-          <>
-            <Title>
-              Welcome to <a href="https://nextjs.org">Next.js!</a>
-            </Title>
-            <p>Signed In as {session.user?.email}</p>
-            <p>You can now access super secret pages</p>
-            <Link href="/secret">
-              <a>Secret Page</a>
-            </Link>
-            <a
-              href="/api/auth/signout"
-              onClick={e => {
-                e.preventDefault();
-                signOut();
-              }}
-            >
-              Sign Out
-            </a>
-          </>
-        )}
+        <div>
+          {!session ? (
+            <>
+              <div>Not signed in</div>
+              <a
+                href="/api/auth/signin"
+                onClick={e => {
+                  e.preventDefault();
+                  signIn();
+                }}
+              >
+                Sign In
+              </a>
+            </>
+          ) : (
+            <>
+              <Title>
+                Welcome to <a href="https://nextjs.org">Next.js!</a>
+              </Title>
+              <p>Signed In as {session.user?.email}</p>
+              <p>You can now access super secret pages</p>
+              <Link href="/secret">
+                <a>Secret Page</a>
+              </Link>
+              <a
+                href="/api/auth/signout"
+                onClick={e => {
+                  e.preventDefault();
+                  signOut();
+                }}
+              >
+                Sign Out
+              </a>
+            </>
+          )}
+        </div>
       </main>
       <footer>
         <div>Footer</div>
@@ -59,8 +61,8 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const allUsers = await prisma.user.findMany();
-  console.log(allUsers);
+  // const allUsers = await prisma.user.findMany();
+  // console.log(allUsers);
   return {props: {}};
 };
 
