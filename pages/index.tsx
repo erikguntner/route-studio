@@ -2,6 +2,8 @@ import Head from 'next/head';
 import Link from 'next/link';
 import styled from 'styled-components';
 import {signIn, signOut, useSession} from 'next-auth/client';
+import {GetServerSideProps} from 'next';
+import prisma from '../utils/db';
 
 export default function Home() {
   const [session] = useSession();
@@ -55,6 +57,12 @@ export default function Home() {
     </Container>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const allUsers = await prisma.user.findMany();
+  console.log(allUsers);
+  return {props: {}};
+};
 
 const Container = styled.div`
   min-height: 100vh;
