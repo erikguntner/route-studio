@@ -61,4 +61,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
 const Container = styled.div`
   max-width: 50rem;
   margin: 0 auto;
+  padding: 2rem;
 `;
