@@ -1,6 +1,6 @@
 describe('Smoke Test', () => {
   it('can view the home page', () => {
     cy.visit('/');
-    cy.contains('Welcome to Next');
+    cy.contains(/not signed in/i);
   });
 });

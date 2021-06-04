@@ -20,7 +20,7 @@ const sendVerificationRequest: SendVerificationRequest = ({
         to: email,
         from,
         subject: `Sign in link for Route Studio`,
-        text: text(),
+        text: 'Sign in link for Route Studio',
         html: html({url, email}),
       },
       error => {
@@ -38,11 +38,8 @@ interface Args {
   email: string;
 }
 
-const text = (): string => `Sign in link for Route Studio`;
-
 const html = ({url, email}: Args): string => {
   const escapedEmail = `${email?.replace(/\./g, '&#8203;.')}`;
-  // const escapedSite = `${site.replace(/\./g, '&#8203;.')}`;
 
   const backgroundColor = '#f9f9f9';
   const textColor = '#444444';
