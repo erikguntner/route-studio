@@ -34,6 +34,7 @@ const SignIn = ({providers}: Props) => {
           ? Object.values(providers)
               .filter(({name}) => name !== 'Email')
               .map(({name, id}) => {
+                console.log(id);
                 return (
                   <div key={name}>
                     <button onClick={() => signIn(id, {callbackUrl: '/'})}>

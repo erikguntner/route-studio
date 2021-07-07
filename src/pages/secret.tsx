@@ -30,12 +30,10 @@ const Secret = () => {
   }
 
   return (
-    <main>
-      <div>
-        <h1>Protected Page</h1>
-        <p>{content}</p>
-      </div>
-    </main>
+    <div>
+      <h1>Protected Page</h1>
+      <p>{content}</p>
+    </div>
   );
 };
 
