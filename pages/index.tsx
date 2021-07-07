@@ -61,8 +61,9 @@ export default function Home() {
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
+  // const deleteUsers = await prisma.user.deleteMany({});
   // const allUsers = await prisma.user.findMany();
-  // console.log(allUsers);
+  // console.log(deleteUsers);
   return {props: {}};
 };
 
