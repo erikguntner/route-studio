@@ -34,6 +34,7 @@ export const Nav = () => {
 
 const Header = styled.header`
   display: flex;
+  padding: 1rem;
 
   & > a {
     display: inline;
