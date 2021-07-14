@@ -1,3 +1,4 @@
+import {useRouter} from 'next/router';
 import Head from 'next/head';
 import React, {ReactNode} from 'react';
 import styled from 'styled-components';
@@ -8,6 +9,8 @@ interface Props {
 }
 
 export const Layout = ({children}: Props) => {
+  const router = useRouter();
+
   return (
     <Container>
       <Head>
@@ -17,9 +20,11 @@ export const Layout = ({children}: Props) => {
       </Head>
       <Nav />
       <main>{children}</main>
-      <footer>
-        <div>Footer</div>
-      </footer>
+      {router.route !== '/create' ? (
+        <footer>
+          <div>Footer</div>
+        </footer>
+      ) : null}
     </Container>
   );
 };

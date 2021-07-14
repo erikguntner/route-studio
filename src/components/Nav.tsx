@@ -12,6 +12,9 @@ export const Nav = () => {
         <a>Route Studio</a>
       </Link>
       <nav>
+        <Link href="/create">
+          <a>Create</a>
+        </Link>
         {loading ? (
           <div>loading</div>
         ) : session ? (
