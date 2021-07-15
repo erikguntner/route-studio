@@ -1,5 +1,10 @@
+import dynamic from 'next/dynamic';
+
 const Create = () => {
-  return <div>This is the Create Page</div>;
+  const CreatePage = dynamic(() => import('../components/CreatePage'), {
+    ssr: false,
+  });
+  return <CreatePage />;
 };
 
 export default Create;

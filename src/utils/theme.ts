@@ -67,11 +67,6 @@ export const theme: DefaultTheme = {
 };
 
 export const GlobalStyle = createGlobalStyle`
-  /* http://meyerweb.com/eric/tools/css/reset/ 
-    v2.0 | 20110126
-    License: none (public domain)
-  */
-
   html, body, div, span, applet, object, iframe,
   h1, h2, h3, h4, h5, h6, p, blockquote, pre,
   a, abbr, acronym, address, big, cite, code,
@@ -97,20 +92,25 @@ export const GlobalStyle = createGlobalStyle`
   footer, header, hgroup, menu, nav, section {
     display: block;
   }
+
   body {
     line-height: 1;
   }
+
   ol, ul {
     list-style: none;
   }
+
   blockquote, q {
     quotes: none;
   }
+
   blockquote:before, blockquote:after,
   q:before, q:after {
     content: '';
     content: none;
   }
+
   table {
     border-collapse: collapse;
     border-spacing: 0;
@@ -132,6 +132,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     font-family:
+      ui-serif,
       ui-sans-serif,
       system-ui,
       -apple-system,
@@ -149,6 +150,4 @@ export const GlobalStyle = createGlobalStyle`
   a {
     text-decoration: none;
   }
-  
-
 `;

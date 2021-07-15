@@ -1,6 +1,6 @@
 import {render, screen} from '../utils/test/test-utils';
 import {useSession} from 'next-auth/client';
-import {Nav} from '../components/Nav';
+import {Nav} from '../components/Header';
 import {Session} from 'next-auth';
 jest.mock('next-auth/client');
 
