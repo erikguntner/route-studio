@@ -2,7 +2,7 @@ import type {AppProps} from 'next/app';
 import {Provider} from 'next-auth/client';
 import {ThemeProvider} from 'styled-components';
 import {theme, GlobalStyle} from '../utils/theme';
-import {Layout} from '../components/Layout';
+import {Layout} from '../features/Layout/Layout';
 
 function MyApp({Component, pageProps}: AppProps) {
   return (
