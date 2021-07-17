@@ -1,3 +1,4 @@
+import 'mapbox-gl/dist/mapbox-gl.css';
 import type {AppProps} from 'next/app';
 import {Provider} from 'next-auth/client';
 import {ThemeProvider} from 'styled-components';
