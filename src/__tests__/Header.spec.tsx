@@ -1,12 +1,12 @@
 import {render, screen} from '../utils/test/test-utils';
 import {useSession} from 'next-auth/client';
-import {Nav} from '../features/Layout/Header';
+import {Header} from '../features/Layout/Header';
 import {Session} from 'next-auth';
 jest.mock('next-auth/client');
 
 const setup = (config: [Session | null, boolean]) => {
   (useSession as jest.Mock).mockReturnValueOnce(config);
-  render(<Nav />);
+  render(<Header />);
 };
 
 describe('Nav component', () => {
