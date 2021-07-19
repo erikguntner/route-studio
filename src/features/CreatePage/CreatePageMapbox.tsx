@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ReactMapGL, {Marker} from 'react-map-gl';
+import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {GeoJsonPath} from './GeoJsonPath';
 import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
@@ -25,39 +25,6 @@ const multiPolyline: [number, number][][] = [
   ],
 ];
 
-// interface Dimensions {
-//   width: number;
-//   height: number;
-// }
-
-// const useResizeObserver = (
-//   ref: React.MutableRefObject<HTMLDivElement | null>,
-// ): Dimensions | null => {
-//   const [dimensions, setDimensions] = React.useState<Dimensions | null>({
-//     width: 0,
-//     height: 0,
-//   });
-
-//   React.useEffect(() => {
-//     if (!ref.current) return;
-//     const observerTarget = ref.current;
-//     const resizeObserver = new ResizeObserver(
-//       (entries: ResizeObserverEntry[]) => {
-//         const {width, height} = entries[0].contentRect;
-//         setDimensions({width, height});
-//       },
-//     );
-//     resizeObserver.observe(observerTarget);
-//     return () => {
-//       resizeObserver.unobserve(observerTarget);
-//     };
-//   }, [ref]);
-
-//   return dimensions;
-// };
-
-// let interval: NodeJS.Timeout;
-
 export const CreatePageMapbox = () => {
   const [viewport, setViewport] = React.useState({
     latitude: 51.505,
@@ -71,33 +38,6 @@ export const CreatePageMapbox = () => {
 
   const viewRef = React.useRef(null);
 
-  // const dimensions = useResizeObserver(viewRef);
-
-  // const onHover = React.useCallback(
-  //   event => {
-  //     const {
-  //       features,
-  //       srcEvent: {offsetX, offsetY},
-  //     } = event;
-  //     const hoveredFeature = features && features[0];
-  //     console.log(hoveredFeature);
-
-  //     if (hoveredFeature) {
-  //       const v = new WebMercatorViewport({
-  //         ...viewport,
-  //         width: dimensions?.width || 0,
-  //         height: dimensions?.height || 0,
-  //       });
-
-  //       const [lng, lat] = v.unproject([offsetX, offsetY]); // returns [lng,lat]\
-  //       setHoverInfo({lng, lat, x: offsetX, y: offsetY});
-  //       clearTimeout(interval);
-  //       interval = setTimeout(() => setHoverInfo(null), 1000);
-  //     }
-  //   },
-  //   [setHoverInfo, viewport, dimensions],
-  // );
-
   const computedLineString = React.useMemo(
     () =>
       lineString([
@@ -106,6 +46,25 @@ export const CreatePageMapbox = () => {
         [-0.06, 51.52],
       ]),
     [multiPolyline],
+  );
+
+  const onHover = React.useCallback(
+    ({lngLat, features}: MapEvent) => {
+      if (isDragging) return;
+
+      const computedPoint = point(lngLat);
+      const distance = pointToLineDistance(computedPoint, computedLineString, {
+        units: 'kilometers',
+      });
+
+      if (distance < 0.008 && features) {
+        console.log(features[0].layer.id);
+        setHoverInfo(lngLat);
+      } else if (hoverInfo !== null) {
+        setHoverInfo(null);
+      }
+    },
+    [isDragging, computedLineString, hoverInfo, setHoverInfo],
   );
 
   return (
@@ -119,22 +78,7 @@ export const CreatePageMapbox = () => {
         onViewportChange={(viewport: Viewport) => setViewport(viewport)}
         mapStyle="mapbox://styles/mapbox/outdoors-v11"
         interactiveLayerIds={multiPolyline.map((_, i) => `path-layer-${i}`)}
-        onHover={({lngLat}) => {
-          const computedPoint = point(lngLat);
-          const distance = pointToLineDistance(
-            computedPoint,
-            computedLineString,
-            {units: 'kilometers'},
-          );
-
-          console.log(isDragging);
-          if (distance < 0.05 && isDragging === false) {
-            console.log('set it');
-            setHoverInfo(lngLat);
-          } else if (hoverInfo !== null) {
-            setHoverInfo(null);
-          }
-        }}
+        onHover={onHover}
       >
         <GeoJsonPath lines={multiPolyline} />
         {hoverInfo ? (
@@ -143,11 +87,10 @@ export const CreatePageMapbox = () => {
             longitude={hoverInfo[0]}
             draggable
             onDragStart={() => {
-              console.log('called drag start');
               setIsDragging(true);
             }}
+            onDrag={e => setHoverInfo(e.lngLat)}
             onDragEnd={() => {
-              console.log('called drag end');
               setIsDragging(false);
             }}
           >
@@ -167,9 +110,13 @@ const Wrapper = styled.div`
 `;
 
 const HoverInfo = styled.div`
-  height: 12px;
-  width: 12px;
+  height: 18px;
+  width: 18px;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 50%;
   background-color: red;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
