@@ -48,6 +48,18 @@ export const theme: DefaultTheme = {
       800: '#065f46',
       900: '#064e3b',
     },
+    blue: {
+      50: '#eff6ff',
+      100: '#dbeafe',
+      200: '#bfdbfe',
+      300: '#93c5fd',
+      400: '#60a5fa',
+      500: '#3b82f6',
+      600: '#2563eb',
+      700: '#1d4ed8',
+      800: '#1e40af',
+      900: '#1e3a8a',
+    },
   },
   fontSize: {
     xs: '0.75rem',

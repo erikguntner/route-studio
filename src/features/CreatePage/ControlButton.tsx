@@ -55,6 +55,7 @@ const Button = styled.button`
   padding: 0 1.2rem;
   height: 100%;
   background-color: #fff;
+  color: ${props => props.theme.colors.gray[600]};
 
   &:not(:last-child) {
     border-right: 1px solid ${props => props.theme.colors.gray[200]};
@@ -62,6 +63,10 @@ const Button = styled.button`
 
   &:hover {
     cursor: pointer;
+    color: ${props => props.theme.colors.black};
+    &:not(:disabled) {
+      background-color: ${props => props.theme.colors.gray[100]};
+    }
   }
 
   @media (hover: hover) {
@@ -74,6 +79,11 @@ const Button = styled.button`
 
   &:disabled {
     cursor: not-allowed;
+    color: ${props => props.theme.colors.gray[400]};
+  }
+
+  &:focus {
+    box-shadow: inset 0 0 0 2px ${props => props.theme.colors.blue[200]};
   }
 `;
 

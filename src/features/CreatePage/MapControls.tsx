@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import {ControlButton} from './ControlButton';
-import {Redo} from './Icons';
+import {Redo, Undo} from './Icons';
 
 export const MapControls = () => {
   return (
@@ -13,6 +13,14 @@ export const MapControls = () => {
         disabled={false}
       >
         <Redo />
+      </ControlButton>
+      <ControlButton
+        onClick={() => console.log('clicked')}
+        label="undo"
+        keyCode="a"
+        disabled={true}
+      >
+        <Undo />
       </ControlButton>
     </Wrapper>
   );
