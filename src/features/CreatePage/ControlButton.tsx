@@ -51,7 +51,6 @@ export const ControlButton = ({
 const Button = styled.button`
   position: relative;
   border: none;
-  font-size: 2rem;
   padding: 0 1.2rem;
   height: 100%;
   background-color: #fff;
