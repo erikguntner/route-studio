@@ -50,6 +50,8 @@ const BaseButton = styled.button`
   padding: 12px 20px;
   border-radius: 4px;
   border: none;
+  font-size: 16px;
+  line-height: 1;
 
   &:hover {
     cursor: pointer;
@@ -59,6 +61,7 @@ const BaseButton = styled.button`
 const BaseLink = styled.a`
   padding: 12px 20px;
   border-radius: 4px;
+  border: none;
 
   &:hover {
     cursor: pointer;
@@ -66,8 +69,6 @@ const BaseLink = styled.a`
 `;
 
 const SignOutButton = styled(BaseLink)`
-  padding: 12px 20px;
-  border-radius: 4px;
   background-color: ${COLORS.primary};
   color: ${({theme}) => theme.colors.white};
 
@@ -77,11 +78,12 @@ const SignOutButton = styled(BaseLink)`
 `;
 
 const Button = styled(BaseButton)`
-  font-size: inherit;
-  padding: 12px 20px;
-  border-radius: 4px;
-  background-color: ${({theme}) => theme.colors.primary};
+  background-color: ${COLORS.primary};
   color: ${({theme}) => theme.colors.white};
+
+  &:hover {
+    background-color: ${COLORS.primaryLight};
+  }
 `;
 
 const NavLink = styled(BaseLink)`

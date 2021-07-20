@@ -4,6 +4,8 @@ import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {GeoJsonPath} from './GeoJsonPath';
 import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
+
+import {MapControls} from './MapControls';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -69,14 +71,15 @@ export const CreatePageMapbox = () => {
 
   return (
     <Wrapper ref={viewRef}>
+      <MapControls />
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
+        mapStyle="mapbox://styles/mapbox/outdoors-v11"
         reuseMaps={true}
         width="100%"
         height="100%"
         onViewportChange={(viewport: Viewport) => setViewport(viewport)}
-        mapStyle="mapbox://styles/mapbox/outdoors-v11"
         interactiveLayerIds={multiPolyline.map((_, i) => `path-layer-${i}`)}
         onHover={onHover}
       >
