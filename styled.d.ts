@@ -77,5 +77,6 @@ declare module 'styled-components' {
       '8xl': string;
       '9xl': string;
     };
+    outline: string;
   }
 }

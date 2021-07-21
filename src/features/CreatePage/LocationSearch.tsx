@@ -1,0 +1,145 @@
+import React, {useState} from 'react';
+import {
+  Combobox,
+  ComboboxInput,
+  ComboboxList,
+  ComboboxOption,
+  ComboboxPopover,
+} from '@reach/combobox';
+import {useDebounce} from 'react-use';
+import '@reach/combobox/styles.css';
+
+import styled from 'styled-components';
+
+interface Place {
+  place_id: number;
+  licence: string;
+  osm_type: string;
+  osm_id: number;
+  boundingbox: string[];
+  lat: string;
+  lon: string;
+  display_name: string;
+  class: string;
+  type: string;
+  importance: number;
+  icon?: string;
+}
+
+interface Cache {
+  [key: string]: Place[];
+}
+
+const cache: Cache = {};
+const fetchPlaces = async (query: string): Promise<Place[]> => {
+  if (cache[query]) {
+    return Promise.resolve(cache[query]);
+  }
+
+  const response = await window.fetch(
+    `https://nominatim.openstreetmap.org/search?q=${query}&limit=5&format=json`,
+  );
+
+  const data: Place[] = await response.json();
+
+  if (response.ok) {
+    cache[query] = data;
+    return data;
+  } else {
+    return Promise.reject(new Error('there was an error fetching places'));
+  }
+};
+
+const useLocationMatch = (searchTerm: string): Place[] => {
+  const [locations, setLocations] = useState<Place[]>([]);
+
+  useDebounce(
+    () => {
+      if (searchTerm.trim() !== '') {
+        let isFresh = true;
+
+        fetchPlaces(searchTerm)
+          .then(data => {
+            if (isFresh) setLocations(data);
+          })
+          .catch(err => console.log(err));
+
+        return () => {
+          isFresh = false;
+        };
+      }
+    },
+    500,
+    [searchTerm],
+  );
+
+  return locations;
+};
+
+export const LocationSearch = () => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const locations = useLocationMatch(searchTerm);
+
+  const handleChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  return (
+    <Wrapper>
+      <Box aria-label="Locations">
+        <Input placeholder="Search" onChange={handleChangeSearchTerm} />
+        {locations && (
+          <Popover>
+            {locations.length > 0 ? (
+              <ComboboxList>
+                {locations.map(({osm_id, display_name}) => {
+                  return <ComboboxOption key={osm_id} value={display_name} />;
+                })}
+              </ComboboxList>
+            ) : (
+              <div>nothing</div>
+            )}
+          </Popover>
+        )}
+      </Box>
+    </Wrapper>
+  );
+};
+
+const Wrapper = styled.div`
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+  height: 100%;
+  padding: 8px;
+  background-color: ${props => props.theme.colors.gray[100]};
+  border-right: 1px solid ${props => props.theme.colors.gray[200]};
+
+  @media screen and (max-width: ${props => props.theme.screens.md}) {
+    display: none;
+  }
+`;
+
+const Box = styled(Combobox)`
+  height: 100%;
+`;
+
+const Input = styled(ComboboxInput)`
+  width: 100%;
+  height: 100%;
+  border: 1px solid ${props => props.theme.colors.gray[200]};
+  border-radius: 8px;
+  padding: 0 8px;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    box-shadow: ${props => props.theme.outline};
+  }
+`;
+
+const Popover = styled(ComboboxPopover)`
+  border: 1px solid ${props => props.theme.colors.gray[200]};
+  border-radius: 8px;
+  font-family: inherit;
+`;

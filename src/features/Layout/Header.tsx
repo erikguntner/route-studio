@@ -111,13 +111,7 @@ const Wrapper = styled.header`
 
   nav {
     display: flex;
+    gap: 16px;
     align-items: center;
-
-    a,
-    button {
-      &:not(:last-of-type) {
-        margin-right: 16px;
-      }
-    }
   }
 `;
