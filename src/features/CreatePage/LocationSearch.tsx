@@ -97,7 +97,7 @@ export const LocationSearch = () => {
                 })}
               </ComboboxList>
             ) : (
-              <div>nothing</div>
+              <Empty>No results</Empty>
             )}
           </Popover>
         )}
@@ -122,15 +122,15 @@ const Wrapper = styled.div`
 
 const Box = styled(Combobox)`
   height: 100%;
+  font-family: inherit;
 `;
 
 const Input = styled(ComboboxInput)`
   width: 100%;
   height: 100%;
   border: 1px solid ${props => props.theme.colors.gray[200]};
-  border-radius: 8px;
-  padding: 0 8px;
-  font-family: inherit;
+  border-radius: 4px;
+  padding: 0 12px;
 
   &:focus {
     outline: none;
@@ -141,5 +141,10 @@ const Input = styled(ComboboxInput)`
 const Popover = styled(ComboboxPopover)`
   border: 1px solid ${props => props.theme.colors.gray[200]};
   border-radius: 8px;
-  font-family: inherit;
+`;
+
+const Empty = styled.div`
+  width: 100%;
+  padding: 12px;
+  color: ${props => props.theme.colors.gray[600]};
 `;

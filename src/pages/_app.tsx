@@ -1,6 +1,6 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import type {AppProps} from 'next/app';
-import {Provider} from 'next-auth/client';
+import {Provider as AuthProvider} from 'next-auth/client';
 import {ThemeProvider} from 'styled-components';
 import {theme, GlobalStyle} from '../utils/theme';
 import {Layout} from '../features/Layout/Layout';
@@ -10,13 +10,14 @@ function MyApp({Component, pageProps}: AppProps) {
     <>
       <GlobalStyle />
       <ThemeProvider theme={theme}>
-        <Provider session={pageProps.session}>
+        <AuthProvider session={pageProps.session}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
-        </Provider>
+        </AuthProvider>
       </ThemeProvider>
     </>
   );
 }
+
 export default MyApp;

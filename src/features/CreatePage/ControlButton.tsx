@@ -82,6 +82,7 @@ const Button = styled.button`
   }
 
   &:focus {
+    outline: none;
     box-shadow: ${props => props.theme.outline};
   }
 `;
