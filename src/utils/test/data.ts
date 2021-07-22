@@ -213,3 +213,51 @@ export const routes = [
     distance: '6678.942',
   },
 ];
+
+export const locations = [
+  {
+    boundingbox: ['52.5544666', '53.1689062', '-9.9387575', '-8.2824194'],
+    class: 'boundary',
+    display_name: 'County Clare, Munster, Ireland',
+    icon: 'https://nominatim.openstreetmap.org/ui/mapicons//poi_boundary_administrative.p.20.png',
+    importance: 0.6284332046035948,
+    lat: '52.857257450000006',
+    licence:
+      'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
+    lon: '-8.937435925994537',
+    osm_id: 334885,
+    osm_type: 'relation',
+    place_id: 258414467,
+    type: 'administrative',
+  },
+  {
+    boundingbox: ['52.5544666', '53.1689062', '-9.9387575', '-8.2824194'],
+    class: 'boundary',
+    display_name: 'County Clare, Ireland',
+    icon: 'https://nominatim.openstreetmap.org/ui/mapicons//poi_boundary_administrative.p.20.png',
+    importance: 0.6284332046035948,
+    lat: '52.857257450000006',
+    licence:
+      'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
+    lon: '-8.937435925994537',
+    osm_id: 4072664,
+    osm_type: 'relation',
+    place_id: 258703724,
+    type: 'administrative',
+  },
+  {
+    boundingbox: ['43.8136088', '44.1642517', '-85.088808', '-84.6060368'],
+    class: 'boundary',
+    display_name: 'Clare County, Michigan, United States',
+    icon: 'https://nominatim.openstreetmap.org/ui/mapicons//poi_boundary_administrative.p.20.png',
+    importance: 0.6079072129630848,
+    lat: '43.9688673',
+    licence:
+      'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
+    lon: '-84.8505091',
+    osm_id: 1907312,
+    osm_type: 'relation',
+    place_id: 258465035,
+    type: 'administrative',
+  },
+];

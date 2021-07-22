@@ -93,7 +93,7 @@ export const LocationSearch = () => {
             {locations.length > 0 ? (
               <ComboboxList>
                 {locations.map(({osm_id, display_name}) => {
-                  return <ComboboxOption key={osm_id} value={display_name} />;
+                  return <Option key={osm_id} value={display_name} />;
                 })}
               </ComboboxList>
             ) : (
@@ -123,6 +123,7 @@ const Wrapper = styled.div`
 const Box = styled(Combobox)`
   height: 100%;
   font-family: inherit;
+  color: ${props => props.theme.colors.gray[600]};
 `;
 
 const Input = styled(ComboboxInput)`
@@ -131,6 +132,7 @@ const Input = styled(ComboboxInput)`
   border: 1px solid ${props => props.theme.colors.gray[200]};
   border-radius: 4px;
   padding: 0 12px;
+  color: inherit;
 
   &:focus {
     outline: none;
@@ -141,10 +143,19 @@ const Input = styled(ComboboxInput)`
 const Popover = styled(ComboboxPopover)`
   border: 1px solid ${props => props.theme.colors.gray[200]};
   border-radius: 8px;
+  color: ${props => props.theme.colors.gray[600]};
 `;
 
 const Empty = styled.div`
   width: 100%;
   padding: 12px;
   color: ${props => props.theme.colors.gray[600]};
+`;
+
+const Option = styled(ComboboxOption)`
+  color: inherit;
+
+  > [data-highlighted] {
+    background-color: ${props => props.theme.colors.gray[100]};
+  }
 `;
