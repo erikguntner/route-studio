@@ -6,6 +6,7 @@ import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
+import {useAppSelector} from '../../app/hooks';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -28,6 +29,8 @@ const multiPolyline: [number, number][][] = [
 ];
 
 export const CreatePageMapbox = () => {
+  const count = useAppSelector(state => state.counter.value);
+  console.log(count);
   const [viewport, setViewport] = React.useState({
     latitude: 51.505,
     longitude: -0.09,
@@ -60,7 +63,6 @@ export const CreatePageMapbox = () => {
       });
 
       if (distance < 0.008 && features) {
-        console.log(features[0].layer.id);
         setHoverInfo(lngLat);
       } else if (hoverInfo !== null) {
         setHoverInfo(null);
