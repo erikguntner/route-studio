@@ -16,5 +16,9 @@ module.exports = {
     '\\.(css|less|sass|scss)$': 'identity-obj-proxy',
     '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/utils/test/__mocks__/fileMock.js',
   },
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  setupFiles: [require.resolve('whatwg-fetch')],
+  setupFilesAfterEnv: [
+    '@testing-library/jest-dom/extend-expect',
+    './src/utils/test/setupTests.ts',
+  ],
 };

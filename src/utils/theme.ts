@@ -76,6 +76,7 @@ export const theme: DefaultTheme = {
     '8xl': '6rem',
     '9xl': '8rem',
   },
+  outline: `inset 0 0 0 2px #bfdbfe`,
 };
 
 export const GlobalStyle = createGlobalStyle`

@@ -82,7 +82,8 @@ const Button = styled.button`
   }
 
   &:focus {
-    box-shadow: inset 0 0 0 2px ${props => props.theme.colors.blue[200]};
+    outline: none;
+    box-shadow: ${props => props.theme.outline};
   }
 `;
 
