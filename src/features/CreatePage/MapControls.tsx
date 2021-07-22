@@ -5,9 +5,13 @@ import {Redo, Undo} from './Icons';
 import {LocationSearch} from './LocationSearch';
 
 export const MapControls = () => {
+  const onSelect = (coords: [number, number]) => {
+    console.log(coords);
+  };
+
   return (
     <Wrapper>
-      <LocationSearch />
+      <LocationSearch onSelect={onSelect} />
       <ControlButton
         onClick={() => console.log('clicked')}
         label="redo"

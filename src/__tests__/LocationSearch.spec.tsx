@@ -3,10 +3,17 @@ import {locations} from '../utils/test/data';
 import {server, rest} from '../utils/test/server';
 import {render, screen, userEvent, waitFor} from '../utils/test/test-utils';
 
+const customRender = () => {
+  const onSelect = jest.fn();
+  render(<LocationSearch onSelect={onSelect} />);
+
+  return {onSelect};
+};
+
 describe('LocationSearch', () => {
   it('displays search results', async () => {
     const query = 'Claremont';
-    render(<LocationSearch />);
+    customRender();
 
     const input = screen.getByRole('combobox', {name: /locations/i});
     userEvent.type(input, query);
@@ -21,7 +28,7 @@ describe('LocationSearch', () => {
 
   it('displays empty state when no results are returned', async () => {
     const query = 'Claremont';
-    render(<LocationSearch />);
+    customRender();
 
     server.use(
       rest.get(
@@ -40,5 +47,21 @@ describe('LocationSearch', () => {
     expect(
       screen.queryByText(locations[0].display_name),
     ).not.toBeInTheDocument();
+  });
+
+  it('calls onSelect handler when option is clicked', async () => {
+    const query = 'Claremont';
+    const {onSelect} = customRender();
+
+    const input = screen.getByRole('combobox', {name: /locations/i});
+    userEvent.type(input, query);
+    await waitFor(() =>
+      // getByRole throws an error if it cannot find an element
+      screen.getByRole('listbox'),
+    );
+
+    const options = screen.getAllByRole('option');
+    userEvent.click(options[0]);
+    expect(onSelect).toHaveBeenCalledTimes(1);
   });
 });

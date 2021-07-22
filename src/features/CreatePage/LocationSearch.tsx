@@ -76,7 +76,11 @@ const useLocationMatch = (searchTerm: string): Place[] => {
   return locations;
 };
 
-export const LocationSearch = () => {
+interface Props {
+  onSelect: (coords: [number, number]) => void;
+}
+
+export const LocationSearch = ({onSelect}: Props) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const locations = useLocationMatch(searchTerm);
 
@@ -84,9 +88,16 @@ export const LocationSearch = () => {
     setSearchTerm(e.target.value);
   };
 
+  const handleSelect = (item: string) => {
+    const location = locations.find(({display_name}) => display_name === item);
+    if (location) {
+      onSelect([parseFloat(location.lon), parseFloat(location.lat)]);
+    }
+  };
+
   return (
     <Wrapper>
-      <Box aria-label="Locations">
+      <Box onSelect={handleSelect} aria-label="Locations">
         <Input placeholder="Search" onChange={handleChangeSearchTerm} />
         {locations && (
           <Popover>
@@ -123,7 +134,7 @@ const Wrapper = styled.div`
 const Box = styled(Combobox)`
   height: 100%;
   font-family: inherit;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${props => props.theme.colors.gray[800]};
 `;
 
 const Input = styled(ComboboxInput)`
@@ -143,13 +154,13 @@ const Input = styled(ComboboxInput)`
 const Popover = styled(ComboboxPopover)`
   border: 1px solid ${props => props.theme.colors.gray[200]};
   border-radius: 8px;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${props => props.theme.colors.gray[800]};
 `;
 
 const Empty = styled.div`
   width: 100%;
   padding: 12px;
-  color: ${props => props.theme.colors.gray[600]};
+  color: ${props => props.theme.colors.gray[800]};
 `;
 
 const Option = styled(ComboboxOption)`
