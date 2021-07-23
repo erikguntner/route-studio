@@ -16,19 +16,6 @@ interface Viewport {
   pitch: number;
 }
 
-const multiPolyline: [number, number][][] = [
-  [
-    [-0.1, 51.5],
-    [-0.12, 51.5],
-    [-0.12, 51.5],
-  ],
-  [
-    [-0.05, 51.5],
-    [-0.06, 51.5],
-    [-0.06, 51.52],
-  ],
-];
-
 export const CreatePageMapbox = () => {
   const [viewport, setViewport] = React.useState({
     latitude: 51.505,
@@ -39,23 +26,18 @@ export const CreatePageMapbox = () => {
     React.useState<[number, number] | null>(null);
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
 
-  const {points} = useAppSelector(state => ({points: state.map.points}));
-  const dispatch = useAppDispatch();
+  const {points, lines} = useAppSelector(({map}) => ({
+    points: map.points,
+    lines: map.lines,
+  }));
 
-  const computedLineString = React.useMemo(
-    () =>
-      lineString([
-        [-0.05, 51.5],
-        [-0.06, 51.5],
-        [-0.06, 51.52],
-      ]),
-    [multiPolyline],
-  );
+  const dispatch = useAppDispatch();
 
   const onHover = React.useCallback(
     ({lngLat, features}: MapEvent) => {
-      if (isDragging) return;
+      if (isDragging || lines.length === 0) return;
 
+      const computedLineString = lineString(lines.flat());
       const computedPoint = point(lngLat);
       const distance = pointToLineDistance(computedPoint, computedLineString, {
         units: 'kilometers',
@@ -67,7 +49,7 @@ export const CreatePageMapbox = () => {
         setHoverInfo(null);
       }
     },
-    [isDragging, computedLineString, hoverInfo, setHoverInfo],
+    [isDragging, hoverInfo, setHoverInfo, lines],
   );
 
   const handleClick = async ({lngLat}: MapEvent) => {
@@ -84,8 +66,6 @@ export const CreatePageMapbox = () => {
     }
   };
 
-  console.log(points);
-
   return (
     <Wrapper>
       <MapControls />
@@ -97,18 +77,11 @@ export const CreatePageMapbox = () => {
         width="100%"
         height="100%"
         onViewportChange={(viewport: Viewport) => setViewport(viewport)}
-        interactiveLayerIds={multiPolyline.map((_, i) => `path-layer-${i}`)}
+        interactiveLayerIds={lines.map((_, i) => `path-layer-${i}`)}
         onHover={onHover}
         onClick={handleClick}
       >
-        <GeoJsonPath lines={multiPolyline} />
-        {points.map(point => {
-          return (
-            <Marker key={point[1]} latitude={point[1]} longitude={point[0]}>
-              <HoverInfo />
-            </Marker>
-          );
-        })}
+        <GeoJsonPath lines={lines} />
         {hoverInfo ? (
           <Marker
             latitude={hoverInfo[1]}
@@ -125,6 +98,18 @@ export const CreatePageMapbox = () => {
             <HoverInfo></HoverInfo>
           </Marker>
         ) : null}
+        {points.map(point => {
+          return (
+            <Marker
+              draggable
+              key={point[1]}
+              latitude={point[1]}
+              longitude={point[0]}
+            >
+              <Point />
+            </Marker>
+          );
+        })}
       </ReactMapGL>
     </Wrapper>
   );
@@ -135,6 +120,15 @@ const Wrapper = styled.div`
   flex-direction: column;
   height: calc(100vh - 66px);
   width: 100vw;
+`;
+
+const Point = styled.div`
+  height: 14px;
+  width: 14px;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  background-color: ${props => props.theme.colors.white};
+  border: 3px solid ${props => props.theme.colors.gray[600]};
 `;
 
 const HoverInfo = styled.div`

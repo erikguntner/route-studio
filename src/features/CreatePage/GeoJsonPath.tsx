@@ -2,7 +2,7 @@ import React from 'react';
 import {Source, Layer, LayerProps} from 'react-map-gl';
 import {lineString} from '@turf/helpers';
 interface Props {
-  lines: [number, number][][];
+  lines: number[][][];
 }
 
 export const GeoJsonPath = ({lines}: Props) => {
