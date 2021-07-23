@@ -6,7 +6,8 @@ import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
-import {useAppSelector} from '../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {fetchRouteData} from './mapSlice';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -29,8 +30,6 @@ const multiPolyline: [number, number][][] = [
 ];
 
 export const CreatePageMapbox = () => {
-  const count = useAppSelector(state => state.counter.value);
-  console.log(count);
   const [viewport, setViewport] = React.useState({
     latitude: 51.505,
     longitude: -0.09,
@@ -38,10 +37,10 @@ export const CreatePageMapbox = () => {
   });
   const [hoverInfo, setHoverInfo] =
     React.useState<[number, number] | null>(null);
-
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
 
-  const viewRef = React.useRef(null);
+  const {points} = useAppSelector(state => ({points: state.map.points}));
+  const dispatch = useAppDispatch();
 
   const computedLineString = React.useMemo(
     () =>
@@ -71,8 +70,24 @@ export const CreatePageMapbox = () => {
     [isDragging, computedLineString, hoverInfo, setHoverInfo],
   );
 
+  const handleClick = async ({lngLat}: MapEvent) => {
+    const coords =
+      points.length > 0
+        ? [points[points.length - 1], lngLat]
+        : [lngLat, lngLat];
+
+    try {
+      await dispatch(fetchRouteData(coords)).unwrap();
+      // showToast('success', `Fetched ${user.name}`);
+    } catch (err) {
+      // showToast('error', `Fetch failed: ${err.message}`);
+    }
+  };
+
+  console.log(points);
+
   return (
-    <Wrapper ref={viewRef}>
+    <Wrapper>
       <MapControls />
       <ReactMapGL
         {...viewport}
@@ -84,8 +99,16 @@ export const CreatePageMapbox = () => {
         onViewportChange={(viewport: Viewport) => setViewport(viewport)}
         interactiveLayerIds={multiPolyline.map((_, i) => `path-layer-${i}`)}
         onHover={onHover}
+        onClick={handleClick}
       >
         <GeoJsonPath lines={multiPolyline} />
+        {points.map(point => {
+          return (
+            <Marker key={point[1]} latitude={point[1]} longitude={point[0]}>
+              <HoverInfo />
+            </Marker>
+          );
+        })}
         {hoverInfo ? (
           <Marker
             latitude={hoverInfo[1]}
