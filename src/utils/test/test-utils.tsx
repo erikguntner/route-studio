@@ -7,15 +7,33 @@ import {
 import userEvent from '@testing-library/user-event';
 import {ThemeProvider} from 'styled-components';
 import {theme} from '../theme';
-
-const AllTheProviders: FC = ({children}) => {
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
-};
+import {Provider} from 'react-redux';
+import {configureStore, Store, AnyAction} from '@reduxjs/toolkit';
+import {rootReducer, RootState} from '../../app/store';
 
 const render = (
   ui: ReactElement,
-  options?: Omit<RenderOptions, 'queries'>,
-): RenderResult => rtlRender(ui, {wrapper: AllTheProviders, ...options});
+  {
+    preloadedState,
+    store = configureStore({reducer: rootReducer, preloadedState}),
+    ...renderOptions
+  }: {
+    preloadedState?: RootState;
+    store?: Store<RootState, AnyAction>;
+    renderOptions?: Omit<RenderOptions, 'queries'>;
+  } = {},
+): RenderResult => {
+  console.log('preloaded state', preloadedState);
+  const AllTheProviders: FC = ({children}) => {
+    return (
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>{children}</Provider>
+      </ThemeProvider>
+    );
+  };
+
+  return rtlRender(ui, {wrapper: AllTheProviders, ...renderOptions});
+};
 
 export * from '@testing-library/react';
 export {render, userEvent};

@@ -91,7 +91,6 @@ export const mapSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchRouteData.fulfilled, (state, action) => {
-      console.log(action.payload);
       const {
         snapped_waypoints: {coordinates},
         points: {coordinates: lineCoordinates},
@@ -106,8 +105,6 @@ export const mapSlice = createSlice({
     });
   },
 });
-
-console.log(mapSlice);
 
 export const {addStartingPoint} = mapSlice.actions;
 

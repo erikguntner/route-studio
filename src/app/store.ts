@@ -8,7 +8,7 @@ import counterReducer from '../features/Counter/counterSlice';
 import {mapReducer} from '../features/CreatePage/mapSlice';
 import undoable, {excludeAction} from 'redux-undo';
 
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   counter: counterReducer,
   map: undoable(mapReducer, {
     limit: 10,
