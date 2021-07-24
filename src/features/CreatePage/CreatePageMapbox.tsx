@@ -132,11 +132,13 @@ const Point = styled.div`
 `;
 
 const HoverInfo = styled.div`
-  height: 18px;
-  width: 18px;
+  height: 12px;
+  width: 12px;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 50%;
-  background-color: red;
+  background-color: ${props => props.theme.colors.white};
+  border: 3px solid ${props => props.theme.colors.gray[600]};
+  opacity: 0.85;
 
   &:hover {
     cursor: pointer;
