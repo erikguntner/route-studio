@@ -5,8 +5,9 @@ import {
   Action,
 } from '@reduxjs/toolkit';
 import counterReducer from '../features/Counter/counterSlice';
+import {mapReducer} from '../features/CreatePage/mapSlice';
 
-const rootReducer = combineReducers({counter: counterReducer});
+const rootReducer = combineReducers({counter: counterReducer, map: mapReducer});
 
 export const store = configureStore({
   reducer: rootReducer,

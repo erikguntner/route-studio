@@ -6,7 +6,8 @@ import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
-import {useAppSelector} from '../../app/hooks';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
+import {fetchRouteData} from './mapSlice';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -15,22 +16,7 @@ interface Viewport {
   pitch: number;
 }
 
-const multiPolyline: [number, number][][] = [
-  [
-    [-0.1, 51.5],
-    [-0.12, 51.5],
-    [-0.12, 51.5],
-  ],
-  [
-    [-0.05, 51.5],
-    [-0.06, 51.5],
-    [-0.06, 51.52],
-  ],
-];
-
 export const CreatePageMapbox = () => {
-  const count = useAppSelector(state => state.counter.value);
-  console.log(count);
   const [viewport, setViewport] = React.useState({
     latitude: 51.505,
     longitude: -0.09,
@@ -38,25 +24,20 @@ export const CreatePageMapbox = () => {
   });
   const [hoverInfo, setHoverInfo] =
     React.useState<[number, number] | null>(null);
-
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
 
-  const viewRef = React.useRef(null);
+  const {points, lines} = useAppSelector(({map}) => ({
+    points: map.points,
+    lines: map.lines,
+  }));
 
-  const computedLineString = React.useMemo(
-    () =>
-      lineString([
-        [-0.05, 51.5],
-        [-0.06, 51.5],
-        [-0.06, 51.52],
-      ]),
-    [multiPolyline],
-  );
+  const dispatch = useAppDispatch();
 
   const onHover = React.useCallback(
     ({lngLat, features}: MapEvent) => {
-      if (isDragging) return;
+      if (isDragging || lines.length === 0) return;
 
+      const computedLineString = lineString(lines.flat());
       const computedPoint = point(lngLat);
       const distance = pointToLineDistance(computedPoint, computedLineString, {
         units: 'kilometers',
@@ -68,11 +49,25 @@ export const CreatePageMapbox = () => {
         setHoverInfo(null);
       }
     },
-    [isDragging, computedLineString, hoverInfo, setHoverInfo],
+    [isDragging, hoverInfo, setHoverInfo, lines],
   );
 
+  const handleClick = async ({lngLat}: MapEvent) => {
+    const coords =
+      points.length > 0
+        ? [points[points.length - 1], lngLat]
+        : [lngLat, lngLat];
+
+    try {
+      await dispatch(fetchRouteData(coords)).unwrap();
+      // showToast('success', `Fetched ${user.name}`);
+    } catch (err) {
+      // showToast('error', `Fetch failed: ${err.message}`);
+    }
+  };
+
   return (
-    <Wrapper ref={viewRef}>
+    <Wrapper>
       <MapControls />
       <ReactMapGL
         {...viewport}
@@ -82,10 +77,11 @@ export const CreatePageMapbox = () => {
         width="100%"
         height="100%"
         onViewportChange={(viewport: Viewport) => setViewport(viewport)}
-        interactiveLayerIds={multiPolyline.map((_, i) => `path-layer-${i}`)}
+        interactiveLayerIds={lines.map((_, i) => `path-layer-${i}`)}
         onHover={onHover}
+        onClick={handleClick}
       >
-        <GeoJsonPath lines={multiPolyline} />
+        <GeoJsonPath lines={lines} />
         {hoverInfo ? (
           <Marker
             latitude={hoverInfo[1]}
@@ -102,6 +98,18 @@ export const CreatePageMapbox = () => {
             <HoverInfo></HoverInfo>
           </Marker>
         ) : null}
+        {points.map(point => {
+          return (
+            <Marker
+              draggable
+              key={point[1]}
+              latitude={point[1]}
+              longitude={point[0]}
+            >
+              <Point />
+            </Marker>
+          );
+        })}
       </ReactMapGL>
     </Wrapper>
   );
@@ -114,12 +122,23 @@ const Wrapper = styled.div`
   width: 100vw;
 `;
 
-const HoverInfo = styled.div`
-  height: 18px;
-  width: 18px;
+const Point = styled.div`
+  height: 14px;
+  width: 14px;
   transform: translate3d(-50%, -50%, 0);
   border-radius: 50%;
-  background-color: red;
+  background-color: ${props => props.theme.colors.white};
+  border: 3px solid ${props => props.theme.colors.gray[600]};
+`;
+
+const HoverInfo = styled.div`
+  height: 12px;
+  width: 12px;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  background-color: ${props => props.theme.colors.white};
+  border: 3px solid ${props => props.theme.colors.gray[600]};
+  opacity: 0.85;
 
   &:hover {
     cursor: pointer;
