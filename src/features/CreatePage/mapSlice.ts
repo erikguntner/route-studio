@@ -107,6 +107,8 @@ export const mapSlice = createSlice({
   },
 });
 
+console.log(mapSlice);
+
 export const {addStartingPoint} = mapSlice.actions;
 
 export const mapReducer = mapSlice.reducer;

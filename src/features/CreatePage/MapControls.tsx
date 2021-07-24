@@ -1,10 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import {ActionCreators} from 'redux-undo';
+import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {ControlButton} from './ControlButton';
 import {Redo, Undo} from './Icons';
 import {LocationSearch} from './LocationSearch';
 
 export const MapControls = () => {
+  const {history} = useAppSelector(({map}) => ({history: map}));
+  const dispatch = useAppDispatch();
   const onSelect = (coords: [number, number]) => {
     console.log(coords);
   };
@@ -13,18 +17,18 @@ export const MapControls = () => {
     <Wrapper>
       <LocationSearch onSelect={onSelect} />
       <ControlButton
-        onClick={() => console.log('clicked')}
+        onClick={() => dispatch(ActionCreators.redo())}
         label="redo"
         keyCode="a"
-        disabled={false}
+        disabled={history.future.length === 0}
       >
         <Redo />
       </ControlButton>
       <ControlButton
-        onClick={() => console.log('clicked')}
+        onClick={() => dispatch(ActionCreators.undo())}
         label="undo"
         keyCode="a"
-        disabled={true}
+        disabled={history.past.length === 0}
       >
         <Undo />
       </ControlButton>
