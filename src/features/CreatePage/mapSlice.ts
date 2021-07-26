@@ -71,7 +71,7 @@ export const fetchRouteData = createAsyncThunk<Data, number[][]>(
   },
 );
 
-interface MapState {
+export interface MapState {
   points: number[][];
   lines: number[][][];
 }
@@ -91,7 +91,6 @@ export const mapSlice = createSlice({
   },
   extraReducers: builder => {
     builder.addCase(fetchRouteData.fulfilled, (state, action) => {
-      console.log(action.payload);
       const {
         snapped_waypoints: {coordinates},
         points: {coordinates: lineCoordinates},

@@ -27,8 +27,8 @@ export const CreatePageMapbox = () => {
   const [isDragging, setIsDragging] = React.useState<boolean>(false);
 
   const {points, lines} = useAppSelector(({map}) => ({
-    points: map.points,
-    lines: map.lines,
+    points: map.present.points,
+    lines: map.present.lines,
   }));
 
   const dispatch = useAppDispatch();
