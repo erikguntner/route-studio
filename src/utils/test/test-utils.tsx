@@ -11,19 +11,20 @@ import {Provider} from 'react-redux';
 import {configureStore, Store, AnyAction} from '@reduxjs/toolkit';
 import {rootReducer, RootState} from '../../app/store';
 
+interface Config {
+  preloadedState?: RootState;
+  store?: Store<RootState, AnyAction>;
+  renderOptions?: Omit<RenderOptions, 'queries'>;
+}
+
 const render = (
   ui: ReactElement,
   {
     preloadedState,
     store = configureStore({reducer: rootReducer, preloadedState}),
     ...renderOptions
-  }: {
-    preloadedState?: RootState;
-    store?: Store<RootState, AnyAction>;
-    renderOptions?: Omit<RenderOptions, 'queries'>;
-  } = {},
+  }: Config = {},
 ): RenderResult => {
-  console.log('preloaded state', preloadedState);
   const AllTheProviders: FC = ({children}) => {
     return (
       <ThemeProvider theme={theme}>
