@@ -71,7 +71,7 @@ export const fetchRouteData = createAsyncThunk<Data, number[][]>(
   },
 );
 
-interface MapState {
+export interface MapState {
   points: number[][];
   lines: number[][][];
 }
