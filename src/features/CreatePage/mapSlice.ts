@@ -1,69 +1,40 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {graphHopperApi, Data} from './mapApi';
 
-export interface Data {
-  hints: Hints;
-  info: Info;
-  paths: Path[];
+//THUNKS*******************************
+interface ClickArgs {
+  points: number[][];
 }
 
-export interface Hints {
-  'visited_nodes.sum': number;
-  'visited_nodes.average': number;
+// async thunk to handle click event
+export const fetchRouteDataOnClick = createAsyncThunk<
+  Omit<Data, 'lineIndices' | 'index'>,
+  ClickArgs
+>('map/fetchPointOnClick', async ({points}, {rejectWithValue}) => {
+  const {response, data} = await graphHopperApi({points});
+
+  if (response.ok) {
+    return data;
+  } else {
+    console.error('error fetching point', data);
+    return rejectWithValue(data);
+  }
+});
+
+interface DragArgs {
+  points: number[][];
+  lineIndices: number[];
+  index: number;
 }
 
-export interface Info {
-  copyrights: string[];
-  took: number;
-}
-
-export interface Path {
-  distance: number;
-  weight: number;
-  time: number;
-  transfers: number;
-  points_encoded: boolean;
-  bbox: number[];
-  points: Points;
-  instructions: Instruction[];
-  legs: string[];
-  details: string[];
-  ascend: number;
-  descend: number;
-  snapped_waypoints: Points;
-}
-
-export interface Instruction {
-  distance: number;
-  heading?: number;
-  sign: number;
-  interval: number[];
-  text: string;
-  time: number;
-  street_name: string;
-  last_heading?: number;
-}
-
-export interface Points {
-  type: string;
-  coordinates: Array<number[]>;
-}
-
-export const fetchRouteData = createAsyncThunk<Data, number[][]>(
-  'map/fetchPoint',
-  async (points, {signal, rejectWithValue}) => {
-    const pointString = points
-      .map(point => `point=${point[1]},${point[0]}&`)
-      .join('');
-
-    const response = await window.fetch(
-      `https://graphhopper.com/api/1/route?${pointString}vehicle=foot&debug=true&elevation=true&legs=true&details=street_name&key=${process.env.NEXT_PUBLIC_GRAPH_HOPPER_KEY}&type=json&points_encoded=false`,
-      {signal},
-    );
-
-    const data = await response.json();
+// async thunk to handle drag events
+export const fetchRouteDataOnDrag = createAsyncThunk<Data, DragArgs>(
+  'map/fetchPointOnDrag',
+  async ({points, lineIndices, index}, {rejectWithValue}) => {
+    const {response, data} = await graphHopperApi({points});
 
     if (response.ok) {
-      return data;
+      return {...data, lineIndices, index};
     } else {
       console.error('error fetching point', data);
       return rejectWithValue(data);
@@ -71,6 +42,23 @@ export const fetchRouteData = createAsyncThunk<Data, number[][]>(
   },
 );
 
+const createLineSegments = (
+  waypoints: number[][],
+  coordinates: number[][],
+): number[][][] => {
+  if (waypoints.length === 3) {
+    const middlePointIndex = coordinates.findIndex(
+      coord => coord[0] === waypoints[1][0] && coord[1] === waypoints[1][1],
+    );
+    const leftLine = coordinates.slice(0, middlePointIndex + 1);
+    const rightLine = coordinates.slice(middlePointIndex);
+    return [leftLine, rightLine];
+  }
+
+  return [coordinates];
+};
+
+//SLICE*******************************
 export interface MapState {
   points: number[][];
   lines: number[][][];
@@ -90,17 +78,44 @@ export const mapSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchRouteData.fulfilled, (state, action) => {
+    // Click cases
+    builder.addCase(fetchRouteDataOnClick.fulfilled, (state, action) => {
       const {
         snapped_waypoints: {coordinates},
         points: {coordinates: lineCoordinates},
       } = action.payload.paths[0];
 
+      // The event was a click
       if (state.points.length === 0) {
         state.points.push(coordinates[0]);
       } else {
         state.points.push(coordinates[1]);
         state.lines.push(lineCoordinates);
+      }
+    });
+
+    // Drag cases
+    builder.addCase(fetchRouteDataOnDrag.fulfilled, (state, action) => {
+      const {index} = action.payload;
+      const {
+        snapped_waypoints: {coordinates},
+        points: {coordinates: lineCoordinates},
+      } = action.payload.paths[0];
+      const newLineSegments = createLineSegments(coordinates, lineCoordinates);
+
+      if (index === 0) {
+        // drag first point
+        state.points[0] = coordinates[0];
+        state.lines[0] = newLineSegments[0];
+      } else if (index === state.points.length - 1) {
+        // drag last point
+        state.points[state.points.length - 1] = coordinates[1];
+        state.lines[state.lines.length - 1] = newLineSegments[0];
+      } else {
+        // drag a middle point
+        state.points[index] = coordinates[1];
+        state.lines[index - 1] = newLineSegments[0];
+        state.lines[index] = newLineSegments[1];
       }
     });
   },

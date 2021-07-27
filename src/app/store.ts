@@ -13,8 +13,10 @@ export const rootReducer = combineReducers({
   map: undoable(mapReducer, {
     limit: 10,
     filter: excludeAction([
-      'map/fetchPoint/pending',
-      'map/fetchPoint/rejected',
+      'map/fetchPointOnClick/pending',
+      'map/fetchPointOnClick/rejected',
+      'map/fetchPointOnDrag/pending',
+      'map/fetchPointOnDrag/rejected',
     ]),
   }),
 });

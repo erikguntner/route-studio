@@ -7,7 +7,8 @@ import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {fetchRouteData} from './mapSlice';
+import {fetchRouteDataOnClick, fetchRouteDataOnDrag} from './mapSlice';
+import {CallbackEvent} from 'react-map-gl/src/components/draggable-control';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -59,7 +60,41 @@ export const CreatePageMapbox = () => {
         : [lngLat, lngLat];
 
     try {
-      await dispatch(fetchRouteData(coords)).unwrap();
+      await dispatch(fetchRouteDataOnClick({points: coords})).unwrap();
+      // showToast('success', `Fetched ${user.name}`);
+    } catch (err) {
+      // showToast('error', `Fetch failed: ${err.message}`);
+    }
+  };
+
+  const handleDrag = async ({lngLat}: CallbackEvent, index: number) => {
+    // array of points used to calculate the new line
+    const coords: number[][] = [];
+    // indices of lines to replace
+    const lineIndices: number[] = [];
+
+    if (points.length === 1) {
+      //dragging starting point with no other points
+    } else {
+      if (index === 0) {
+        // If you drag deginning point
+        coords.push(lngLat, points[1]);
+        lineIndices.push(0);
+      } else if (index === lines.length) {
+        // If you drag the end point
+        coords.push(points[points.length - 2], lngLat);
+        lineIndices.push(index - 1);
+      } else {
+        // if you drag a middle point
+        coords.push(points[index - 1], lngLat, points[index + 1]);
+        lineIndices.push(index - 1, index);
+      }
+    }
+
+    try {
+      await dispatch(
+        fetchRouteDataOnDrag({points: coords, lineIndices, index}),
+      ).unwrap();
       // showToast('success', `Fetched ${user.name}`);
     } catch (err) {
       // showToast('error', `Fetch failed: ${err.message}`);
@@ -87,24 +122,21 @@ export const CreatePageMapbox = () => {
             latitude={hoverInfo[1]}
             longitude={hoverInfo[0]}
             draggable
-            onDragStart={() => {
-              setIsDragging(true);
-            }}
+            onDragStart={() => setIsDragging(true)}
             onDrag={e => setHoverInfo(e.lngLat)}
-            onDragEnd={() => {
-              setIsDragging(false);
-            }}
+            onDragEnd={() => setIsDragging(false)}
           >
             <HoverInfo></HoverInfo>
           </Marker>
         ) : null}
-        {points.map(point => {
+        {points.map((point, i) => {
           return (
             <Marker
               draggable
               key={point[1]}
               latitude={point[1]}
               longitude={point[0]}
+              onDragEnd={e => handleDrag(e, i)}
             >
               <Point />
             </Marker>
