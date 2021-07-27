@@ -1,74 +1,16 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {graphHopperApi, Data} from './mapApi';
 
-export interface Data {
-  hints: Hints;
-  info: Info;
-  paths: Path[];
-  lineIndices: number[] | undefined;
-  index: number | undefined;
-}
-
-export interface Hints {
-  'visited_nodes.sum': number;
-  'visited_nodes.average': number;
-}
-
-export interface Info {
-  copyrights: string[];
-  took: number;
-}
-
-export interface Path {
-  distance: number;
-  weight: number;
-  time: number;
-  transfers: number;
-  points_encoded: boolean;
-  bbox: number[];
-  points: Points;
-  instructions: Instruction[];
-  legs: string[];
-  details: string[];
-  ascend: number;
-  descend: number;
-  snapped_waypoints: Points;
-}
-
-export interface Instruction {
-  distance: number;
-  heading?: number;
-  sign: number;
-  interval: number[];
-  text: string;
-  time: number;
-  street_name: string;
-  last_heading?: number;
-}
-
-export interface Points {
-  type: string;
-  coordinates: Array<number[]>;
-}
-
-interface Args {
+interface ClickArgs {
   points: number[][];
   lineIndices?: number[] | undefined;
   index?: number | undefined;
 }
 
-export const fetchRouteData = createAsyncThunk<Data, Args>(
+export const fetchRouteData = createAsyncThunk<Data, ClickArgs>(
   'map/fetchPoint',
-  async ({points, lineIndices, index}, {signal, rejectWithValue}) => {
-    const pointString = points
-      .map(point => `point=${point[1]},${point[0]}&`)
-      .join('');
-
-    const response = await window.fetch(
-      `https://graphhopper.com/api/1/route?${pointString}vehicle=foot&debug=true&elevation=true&legs=true&details=street_name&key=${process.env.NEXT_PUBLIC_GRAPH_HOPPER_KEY}&type=json&points_encoded=false`,
-      {signal},
-    );
-
-    const data = await response.json();
+  async ({points, lineIndices, index}, {rejectWithValue}) => {
+    const {response, data} = await graphHopperApi({points});
 
     if (response.ok) {
       return {...data, lineIndices, index};
