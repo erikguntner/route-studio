@@ -7,7 +7,7 @@ import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {fetchRouteData} from './mapSlice';
+import {fetchRouteDataOnClick, fetchRouteDataOnDrag} from './mapSlice';
 import {CallbackEvent} from 'react-map-gl/src/components/draggable-control';
 interface Viewport {
   latitude: number;
@@ -60,7 +60,7 @@ export const CreatePageMapbox = () => {
         : [lngLat, lngLat];
 
     try {
-      await dispatch(fetchRouteData({points: coords})).unwrap();
+      await dispatch(fetchRouteDataOnClick({points: coords})).unwrap();
       // showToast('success', `Fetched ${user.name}`);
     } catch (err) {
       // showToast('error', `Fetch failed: ${err.message}`);
@@ -93,7 +93,7 @@ export const CreatePageMapbox = () => {
 
     try {
       await dispatch(
-        fetchRouteData({points: coords, lineIndices, index}),
+        fetchRouteDataOnDrag({points: coords, lineIndices, index}),
       ).unwrap();
       // showToast('success', `Fetched ${user.name}`);
     } catch (err) {

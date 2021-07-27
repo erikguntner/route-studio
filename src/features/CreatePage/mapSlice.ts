@@ -1,14 +1,35 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {graphHopperApi, Data} from './mapApi';
 
+//THUNKS*******************************
 interface ClickArgs {
   points: number[][];
-  lineIndices?: number[] | undefined;
-  index?: number | undefined;
 }
 
-export const fetchRouteData = createAsyncThunk<Data, ClickArgs>(
-  'map/fetchPoint',
+// async thunk to handle click event
+export const fetchRouteDataOnClick = createAsyncThunk<
+  Omit<Data, 'lineIndices' | 'index'>,
+  ClickArgs
+>('map/fetchPointOnClick', async ({points}, {rejectWithValue}) => {
+  const {response, data} = await graphHopperApi({points});
+
+  if (response.ok) {
+    return data;
+  } else {
+    console.error('error fetching point', data);
+    return rejectWithValue(data);
+  }
+});
+
+interface DragArgs {
+  points: number[][];
+  lineIndices: number[];
+  index: number;
+}
+
+// async thunk to handle drag events
+export const fetchRouteDataOnDrag = createAsyncThunk<Data, DragArgs>(
+  'map/fetchPointOnDrag',
   async ({points, lineIndices, index}, {rejectWithValue}) => {
     const {response, data} = await graphHopperApi({points});
 
@@ -37,6 +58,7 @@ const createLineSegments = (
   return [coordinates];
 };
 
+//SLICE*******************************
 export interface MapState {
   points: number[][];
   lines: number[][][];
@@ -56,42 +78,44 @@ export const mapSlice = createSlice({
     },
   },
   extraReducers: builder => {
-    builder.addCase(fetchRouteData.fulfilled, (state, action) => {
-      const {index} = action.payload;
+    // Click cases
+    builder.addCase(fetchRouteDataOnClick.fulfilled, (state, action) => {
       const {
         snapped_waypoints: {coordinates},
         points: {coordinates: lineCoordinates},
       } = action.payload.paths[0];
 
-      if (index === undefined) {
-        // The event was a click
-        if (state.points.length === 0) {
-          state.points.push(coordinates[0]);
-        } else {
-          state.points.push(coordinates[1]);
-          state.lines.push(lineCoordinates);
-        }
+      // The event was a click
+      if (state.points.length === 0) {
+        state.points.push(coordinates[0]);
       } else {
-        // the event was a drag
-        const newLineSegments = createLineSegments(
-          coordinates,
-          lineCoordinates,
-        );
+        state.points.push(coordinates[1]);
+        state.lines.push(lineCoordinates);
+      }
+    });
 
-        if (index === 0) {
-          // drag first point
-          state.points[0] = coordinates[0];
-          state.lines[0] = newLineSegments[0];
-        } else if (index === state.points.length - 1) {
-          // drag last point
-          state.points[state.points.length - 1] = coordinates[1];
-          state.lines[state.lines.length - 1] = newLineSegments[0];
-        } else {
-          // drag a middle point
-          state.points[index] = coordinates[1];
-          state.lines[index - 1] = newLineSegments[0];
-          state.lines[index] = newLineSegments[1];
-        }
+    // Drag cases
+    builder.addCase(fetchRouteDataOnDrag.fulfilled, (state, action) => {
+      const {index} = action.payload;
+      const {
+        snapped_waypoints: {coordinates},
+        points: {coordinates: lineCoordinates},
+      } = action.payload.paths[0];
+      const newLineSegments = createLineSegments(coordinates, lineCoordinates);
+
+      if (index === 0) {
+        // drag first point
+        state.points[0] = coordinates[0];
+        state.lines[0] = newLineSegments[0];
+      } else if (index === state.points.length - 1) {
+        // drag last point
+        state.points[state.points.length - 1] = coordinates[1];
+        state.lines[state.lines.length - 1] = newLineSegments[0];
+      } else {
+        // drag a middle point
+        state.points[index] = coordinates[1];
+        state.lines[index - 1] = newLineSegments[0];
+        state.lines[index] = newLineSegments[1];
       }
     });
   },

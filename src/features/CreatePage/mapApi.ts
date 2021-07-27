@@ -2,8 +2,8 @@ export interface Data {
   hints: Hints;
   info: Info;
   paths: Path[];
-  lineIndices: number[] | undefined;
-  index: number | undefined;
+  lineIndices: number[];
+  index: number;
 }
 
 export interface Hints {
