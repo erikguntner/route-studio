@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {ActionCreators} from 'redux-undo';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {ControlButton} from './ControlButton';
-import {Redo, Undo} from './Icons';
+import {Redo, Undo, Clear} from './Icons';
 import {LocationSearch} from './LocationSearch';
 
 export const MapControls = () => {
@@ -27,10 +27,18 @@ export const MapControls = () => {
       <ControlButton
         onClick={() => dispatch(ActionCreators.undo())}
         label="undo"
-        keyCode="a"
+        keyCode="s"
         disabled={history.past.length === 0}
       >
         <Undo />
+      </ControlButton>
+      <ControlButton
+        onClick={() => 'Clear'}
+        label="clear"
+        keyCode="d"
+        disabled={false}
+      >
+        <Clear />
       </ControlButton>
     </Wrapper>
   );
