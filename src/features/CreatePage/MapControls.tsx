@@ -5,6 +5,7 @@ import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {ControlButton} from './ControlButton';
 import {Redo, Undo, Clear} from './Icons';
 import {LocationSearch} from './LocationSearch';
+import {clearState} from './mapSlice';
 
 export const MapControls = () => {
   const {history} = useAppSelector(({map}) => ({history: map}));
@@ -33,7 +34,7 @@ export const MapControls = () => {
         <Undo />
       </ControlButton>
       <ControlButton
-        onClick={() => 'Clear'}
+        onClick={() => dispatch(clearState())}
         label="clear"
         keyCode="d"
         disabled={false}
