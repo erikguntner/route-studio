@@ -73,8 +73,12 @@ export const mapSlice = createSlice({
   name: 'map',
   initialState,
   reducers: {
-    addStartingPoint: (state, action: PayloadAction<number[]>) => {
-      state.points.push(action.payload);
+    updatePoint: (
+      state,
+      action: PayloadAction<{index: number; coords: number[]}>,
+    ) => {
+      const {index, coords} = action.payload;
+      state.points[index] = coords;
     },
   },
   extraReducers: builder => {
@@ -121,6 +125,6 @@ export const mapSlice = createSlice({
   },
 });
 
-export const {addStartingPoint} = mapSlice.actions;
+export const {updatePoint} = mapSlice.actions;
 
 export const mapReducer = mapSlice.reducer;

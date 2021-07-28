@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {GeoJsonPath} from './GeoJsonPath';
@@ -6,8 +6,13 @@ import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
+import {ConnectingLines} from './ConnectingLines';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {fetchRouteDataOnClick, fetchRouteDataOnDrag} from './mapSlice';
+import {
+  fetchRouteDataOnClick,
+  fetchRouteDataOnDrag,
+  updatePoint,
+} from './mapSlice';
 import {CallbackEvent} from 'react-map-gl/src/components/draggable-control';
 interface Viewport {
   latitude: number;
@@ -25,7 +30,8 @@ export const CreatePageMapbox = () => {
   });
   const [hoverInfo, setHoverInfo] =
     React.useState<[number, number] | null>(null);
-  const [isDragging, setIsDragging] = React.useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [index, setIndex] = React.useState<number>(0);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -67,7 +73,18 @@ export const CreatePageMapbox = () => {
     }
   };
 
-  const handleDrag = async ({lngLat}: CallbackEvent, index: number) => {
+  const handleDragStart = (event: CallbackEvent, i: number) => {
+    if (points.length > 1) {
+      setIsDragging(true);
+    }
+    setIndex(i);
+  };
+
+  const handleDrag = (event: CallbackEvent, i: number) => {
+    dispatch(updatePoint({index: i, coords: event.lngLat}));
+  };
+
+  const handleDragEnd = async ({lngLat}: CallbackEvent, index: number) => {
     // array of points used to calculate the new line
     const coords: number[][] = [];
     // indices of lines to replace
@@ -99,6 +116,7 @@ export const CreatePageMapbox = () => {
     } catch (err) {
       // showToast('error', `Fetch failed: ${err.message}`);
     }
+    setIsDragging(false);
   };
 
   return (
@@ -129,14 +147,17 @@ export const CreatePageMapbox = () => {
             <HoverInfo></HoverInfo>
           </Marker>
         ) : null}
+        {isDragging && <ConnectingLines points={points} index={index} />}
         {points.map((point, i) => {
           return (
             <Marker
+              key={i}
               draggable
-              key={point[1]}
               latitude={point[1]}
               longitude={point[0]}
-              onDragEnd={e => handleDrag(e, i)}
+              onDragStart={e => handleDragStart(e, i)}
+              onDrag={e => handleDrag(e, i)}
+              onDragEnd={e => handleDragEnd(e, i)}
             >
               <Point />
             </Marker>
