@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {GeoJsonPath} from './GeoJsonPath';
@@ -6,9 +6,10 @@ import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 
 import {MapControls} from './MapControls';
+import {ConnectingLines} from './ConnectingLines';
+import {Points} from './Points';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
-import {fetchRouteDataOnClick, fetchRouteDataOnDrag} from './mapSlice';
-import {CallbackEvent} from 'react-map-gl/src/components/draggable-control';
+import {fetchRouteDataOnClick} from './mapSlice';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -25,7 +26,8 @@ export const CreatePageMapbox = () => {
   });
   const [hoverInfo, setHoverInfo] =
     React.useState<[number, number] | null>(null);
-  const [isDragging, setIsDragging] = React.useState<boolean>(false);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
+  const [index, setIndex] = React.useState<number>(0);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -67,40 +69,6 @@ export const CreatePageMapbox = () => {
     }
   };
 
-  const handleDrag = async ({lngLat}: CallbackEvent, index: number) => {
-    // array of points used to calculate the new line
-    const coords: number[][] = [];
-    // indices of lines to replace
-    const lineIndices: number[] = [];
-
-    if (points.length === 1) {
-      //dragging starting point with no other points
-    } else {
-      if (index === 0) {
-        // If you drag deginning point
-        coords.push(lngLat, points[1]);
-        lineIndices.push(0);
-      } else if (index === lines.length) {
-        // If you drag the end point
-        coords.push(points[points.length - 2], lngLat);
-        lineIndices.push(index - 1);
-      } else {
-        // if you drag a middle point
-        coords.push(points[index - 1], lngLat, points[index + 1]);
-        lineIndices.push(index - 1, index);
-      }
-    }
-
-    try {
-      await dispatch(
-        fetchRouteDataOnDrag({points: coords, lineIndices, index}),
-      ).unwrap();
-      // showToast('success', `Fetched ${user.name}`);
-    } catch (err) {
-      // showToast('error', `Fetch failed: ${err.message}`);
-    }
-  };
-
   return (
     <Wrapper>
       <MapControls />
@@ -129,19 +97,17 @@ export const CreatePageMapbox = () => {
             <HoverInfo></HoverInfo>
           </Marker>
         ) : null}
-        {points.map((point, i) => {
-          return (
-            <Marker
-              draggable
-              key={point[1]}
-              latitude={point[1]}
-              longitude={point[0]}
-              onDragEnd={e => handleDrag(e, i)}
-            >
-              <Point />
-            </Marker>
-          );
-        })}
+        <ConnectingLines
+          points={points}
+          index={index}
+          isDragging={isDragging}
+        />
+        <Points
+          points={points}
+          lines={lines}
+          setIsDragging={setIsDragging}
+          setIndex={setIndex}
+        />
       </ReactMapGL>
     </Wrapper>
   );
@@ -152,15 +118,6 @@ const Wrapper = styled.div`
   flex-direction: column;
   height: calc(100vh - 66px);
   width: 100vw;
-`;
-
-const Point = styled.div`
-  height: 14px;
-  width: 14px;
-  transform: translate3d(-50%, -50%, 0);
-  border-radius: 50%;
-  background-color: ${props => props.theme.colors.white};
-  border: 3px solid ${props => props.theme.colors.gray[600]};
 `;
 
 const HoverInfo = styled.div`

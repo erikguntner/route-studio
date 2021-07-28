@@ -17,6 +17,7 @@ export const rootReducer = combineReducers({
       'map/fetchPointOnClick/rejected',
       'map/fetchPointOnDrag/pending',
       'map/fetchPointOnDrag/rejected',
+      'map/updatePoint',
     ]),
   }),
 });
