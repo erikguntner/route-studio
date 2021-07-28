@@ -4,6 +4,7 @@ import {CanvasOverlay} from 'react-map-gl';
 interface ConnectingLinesProps {
   points: number[][];
   index: number;
+  isDragging: boolean;
   lineWidth?: number;
   renderWhileDragging?: boolean;
 }
@@ -19,6 +20,7 @@ interface Redraw {
 export const ConnectingLines = ({
   points,
   index,
+  isDragging,
   lineWidth = 3,
   renderWhileDragging = true,
 }: ConnectingLinesProps) => {
@@ -54,5 +56,5 @@ export const ConnectingLines = ({
     }
   };
 
-  return <CanvasOverlay redraw={redraw} />;
+  return isDragging ? <CanvasOverlay redraw={redraw} /> : null;
 };
