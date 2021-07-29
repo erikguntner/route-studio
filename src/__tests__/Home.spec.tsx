@@ -4,7 +4,7 @@ import {useSession} from 'next-auth/client';
 jest.mock('next-auth/client');
 
 describe('Home Page', () => {
-  it('Renders correctly when signed out', () => {
+  test('Renders correctly when signed out', () => {
     (useSession as jest.Mock).mockReturnValueOnce([null, false]);
 
     render(<Home />);

@@ -8,7 +8,7 @@ import {LocationSearch} from './LocationSearch';
 import {clearState} from './mapSlice';
 
 export const MapControls = () => {
-  const {history} = useAppSelector(({map}) => ({history: map}));
+  const {map} = useAppSelector(({map}) => ({map}));
   const dispatch = useAppDispatch();
   const onSelect = (coords: [number, number]) => {
     console.log(coords);
@@ -21,7 +21,7 @@ export const MapControls = () => {
         onClick={() => dispatch(ActionCreators.redo())}
         label="redo"
         keyCode="a"
-        disabled={history.future.length === 0}
+        disabled={map.future.length === 0}
       >
         <Redo />
       </ControlButton>
@@ -29,7 +29,7 @@ export const MapControls = () => {
         onClick={() => dispatch(ActionCreators.undo())}
         label="undo"
         keyCode="s"
-        disabled={history.past.length === 0}
+        disabled={map.past.length === 0}
       >
         <Undo />
       </ControlButton>
@@ -37,7 +37,7 @@ export const MapControls = () => {
         onClick={() => dispatch(clearState())}
         label="clear"
         keyCode="d"
-        disabled={false}
+        disabled={map.present.points.length === 0}
       >
         <Clear />
       </ControlButton>
