@@ -11,7 +11,7 @@ const customRender = () => {
 };
 
 describe('LocationSearch', () => {
-  it('displays search results', async () => {
+  test('displays search results', async () => {
     const query = 'Claremont';
     customRender();
 
@@ -26,7 +26,7 @@ describe('LocationSearch', () => {
     expect(screen.queryByText(/no results/i)).not.toBeInTheDocument();
   });
 
-  it('displays empty state when no results are returned', async () => {
+  test('displays empty state when no results are returned', async () => {
     const query = 'Claremont';
     customRender();
 
@@ -49,7 +49,7 @@ describe('LocationSearch', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('calls onSelect handler when option is clicked', async () => {
+  test('calls onSelect handler when option is clicked', async () => {
     const query = 'Claremont';
     const {onSelect} = customRender();
 

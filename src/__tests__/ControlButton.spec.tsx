@@ -33,7 +33,7 @@ const renderButton = ({
 };
 
 describe('ControlButton', () => {
-  it('calls onClick when clicked or key is pressed', () => {
+  test('calls onClick when clicked or key is pressed', () => {
     const {onClick, keyCode} = renderButton({
       label: 'redo',
       keyCode: 'a',
@@ -50,7 +50,7 @@ describe('ControlButton', () => {
     expect(onClick).toHaveBeenCalledTimes(2);
   });
 
-  it('does not call onClick when disabled', () => {
+  test('does not call onClick when disabled', () => {
     const {onClick, keyCode} = renderButton({
       label: 'redo',
       keyCode: 'a',

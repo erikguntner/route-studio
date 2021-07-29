@@ -10,7 +10,7 @@ const setup = (config: [Session | null, boolean]) => {
 };
 
 describe('Nav component', () => {
-  it('Renders Sign In button when session exists', () => {
+  test('Renders Sign In button when session exists', () => {
     setup([null, false]);
 
     expect(screen.getByRole('button', {name: /sign in/i})).toBeInTheDocument();

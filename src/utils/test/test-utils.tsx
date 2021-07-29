@@ -26,6 +26,7 @@ const render = (
   }: Config = {},
 ): RenderResult => {
   const AllTheProviders: FC = ({children}) => {
+    // console.log(store.getState());
     return (
       <ThemeProvider theme={theme}>
         <Provider store={store}>{children}</Provider>

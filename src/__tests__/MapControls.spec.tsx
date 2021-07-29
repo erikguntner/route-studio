@@ -16,31 +16,26 @@ const setup = (history: StateWithHistory<MapState>) => {
       value: 0,
       status: 'idle',
     },
-    map: {
-      ...history,
-      group: null,
-      _latestUnfiltered: {
-        points: [],
-        lines: [],
-      },
-      index: 5,
-      limit: 6,
-    },
+    map: history,
   };
 
   render(<MapControls />, {
     preloadedState,
   });
 
-  const undoButton = screen.getByRole('button', {name: /undo/i});
-  const redoButton = screen.getByRole('button', {name: /redo/i});
-
-  return {preloadedState, undoButton, redoButton};
+  return {preloadedState};
 };
 
 describe('MapControls', () => {
-  it('Disables Redo button when past is empty', () => {
-    const {preloadedState, redoButton, undoButton} = setup({
+  test('Renders all buttons', () => {
+    render(<MapControls />);
+    expect(screen.getByRole('button', {name: /undo/i})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /redo/i})).toBeInTheDocument();
+    expect(screen.getByRole('button', {name: /clear/i})).toBeInTheDocument();
+  });
+
+  test('Disables Redo button when future is empty and Undo button when past is empty', () => {
+    const {preloadedState} = setup({
       past: [
         {points: [], lines: []},
         {points: [], lines: []},
@@ -49,43 +44,19 @@ describe('MapControls', () => {
       future: [],
     });
 
-    const {past} = preloadedState.map;
+    // const {past} = preloadedState.map;
+    const undoButton = screen.getByRole('button', {name: /undo/i});
+    const redoButton = screen.getByRole('button', {name: /redo/i});
 
     expect(undoButton).not.toBeDisabled();
     expect(redoButton).toBeDisabled();
 
     // Click undo button until the past is empty
-    past.forEach(() => {
+    preloadedState.map.past.forEach(() => {
       userEvent.click(undoButton);
     });
 
     // check for disabled state
-    expect(undoButton).toBeDisabled();
-    expect(redoButton).not.toBeDisabled();
-  });
-
-  it('Disables Undo button when future is empty', () => {
-    const {preloadedState, redoButton, undoButton} = setup({
-      past: [],
-      present: {points: [], lines: []},
-      future: [
-        {points: [], lines: []},
-        {points: [], lines: []},
-      ],
-    });
-
-    const {future} = preloadedState.map;
-
-    // check for disabled state
-    expect(undoButton).not.toBeDisabled();
-    expect(redoButton).toBeDisabled();
-
-    // Click redo button until future is empty
-    future.forEach(() => {
-      userEvent.click(undoButton);
-    });
-
-    // check disabled states
     expect(undoButton).toBeDisabled();
     expect(redoButton).not.toBeDisabled();
   });

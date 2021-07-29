@@ -80,6 +80,10 @@ export const mapSlice = createSlice({
       const {index, coords} = action.payload;
       state.points[index] = coords;
     },
+    clearState: state => {
+      state.points = initialState.points;
+      state.lines = initialState.lines;
+    },
   },
   extraReducers: builder => {
     // Click cases
@@ -125,6 +129,6 @@ export const mapSlice = createSlice({
   },
 });
 
-export const {updatePoint} = mapSlice.actions;
+export const {updatePoint, clearState} = mapSlice.actions;
 
 export const mapReducer = mapSlice.reducer;
