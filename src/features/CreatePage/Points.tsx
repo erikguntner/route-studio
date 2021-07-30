@@ -82,7 +82,7 @@ export const Points = ({
             onDrag={e => handleDrag(e, i)}
             onDragEnd={e => handleDragEnd(e, i)}
           >
-            <Point />
+            <Point data-testid="point" />
           </Marker>
         );
       })}

@@ -26,7 +26,7 @@ export const DestinationMarker = ({
       >
         <MarkerWrapper>
           <Buttons>
-            <button aria-label="Do not add point to route" onClick={cancel}>
+            <button aria-label="Close pop up" onClick={cancel}>
               Cancel
             </button>
             <button
