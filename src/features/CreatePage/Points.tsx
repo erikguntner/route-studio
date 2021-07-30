@@ -1,7 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 import {Marker} from 'react-map-gl';
-import {fetchRouteDataOnDrag, MapState, updatePoint} from './mapSlice';
+import {
+  fetchRouteDataOnDrag,
+  MapState,
+  updatePoint,
+  updateFirstPoint,
+} from './mapSlice';
 import {CallbackEvent} from 'react-map-gl/src/components/draggable-control';
 import {useAppDispatch} from '../../app/hooks';
 
@@ -24,8 +29,8 @@ export const Points = ({
     setIndex(i);
   };
 
-  const handleDrag = (event: CallbackEvent, i: number) => {
-    dispatch(updatePoint({index: i, coords: event.lngLat}));
+  const handleDrag = ({lngLat}: CallbackEvent, i: number) => {
+    dispatch(updatePoint({index: i, coords: lngLat}));
   };
 
   const handleDragEnd = async ({lngLat}: CallbackEvent, index: number) => {
@@ -36,6 +41,7 @@ export const Points = ({
 
     if (points.length === 1) {
       //dragging starting point with no other points
+      dispatch(updateFirstPoint(lngLat));
     } else {
       if (index === 0) {
         // If you drag deginning point
@@ -50,17 +56,17 @@ export const Points = ({
         coords.push(points[index - 1], lngLat, points[index + 1]);
         lineIndices.push(index - 1, index);
       }
-    }
 
-    try {
-      await dispatch(
-        fetchRouteDataOnDrag({points: coords, lineIndices, index}),
-      ).unwrap();
-      // showToast('success', `Fetched ${user.name}`);
-    } catch (err) {
-      // showToast('error', `Fetch failed: ${err.message}`);
+      try {
+        await dispatch(
+          fetchRouteDataOnDrag({points: coords, lineIndices, index}),
+        ).unwrap();
+        // showToast('success', `Fetched ${user.name}`);
+      } catch (err) {
+        // showToast('error', `Fetch failed: ${err.message}`);
+      }
+      setIsDragging(false);
     }
-    setIsDragging(false);
   };
 
   return (
