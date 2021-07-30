@@ -124,6 +124,7 @@ export const CreatePageMapbox = () => {
           location={searchPoint}
           cancel={() => setSearchPoint(null)}
           onClick={addDestinationToRoute}
+          setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
     </Wrapper>

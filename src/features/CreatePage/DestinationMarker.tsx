@@ -1,17 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Popup} from 'react-map-gl';
+import {Popup, Marker} from 'react-map-gl';
 
 interface AddDestinationMarkerProps {
   location: number[] | null;
   cancel: () => void;
   onClick: (lngLat: number[]) => void;
+  setSearchPoint: React.Dispatch<React.SetStateAction<number[] | null>>;
 }
 
 export const DestinationMarker = ({
   location,
   cancel,
   onClick,
+  setSearchPoint,
 }: AddDestinationMarkerProps) => {
   return location ? (
     <>
@@ -36,27 +38,43 @@ export const DestinationMarker = ({
           </Buttons>
         </MarkerWrapper>
       </UserPopup>
+      <Marker
+        draggable
+        longitude={location[0]}
+        latitude={location[1]}
+        onDrag={e => setSearchPoint(e.lngLat)}
+      >
+        <Point />
+      </Marker>
     </>
   ) : null;
 };
+
+const Point = styled.div`
+  height: 14px;
+  width: 14px;
+  transform: translate3d(-50%, -50%, 0);
+  border-radius: 50%;
+  background-color: ${props => props.theme.colors.white};
+  border: 3px solid ${props => props.theme.colors.gray[600]};
+`;
+
 const MarkerWrapper = styled.div`
   position: relative;
 `;
 
 const UserPopup = styled(Popup)`
   padding: 0;
+  background-color: transparent;
 
   .mapboxgl-popup-content {
     padding: 0;
+    background-color: transparent;
   }
 `;
 
 const Buttons = styled.div`
-  /* position: absolute;
-  left: 50%;
-  top: -9px;
-  display: flex;
-  transform: translateX(-50%) translateY(-99%); */
+  transform: translateY(-9px);
 
   button {
     width: 100px;
