@@ -19,7 +19,7 @@ const setup = (history: StateWithHistory<MapState>) => {
     map: history,
   };
 
-  render(<MapControls />, {
+  render(<MapControls handleSelect={jest.fn()} />, {
     preloadedState,
   });
 
@@ -28,7 +28,7 @@ const setup = (history: StateWithHistory<MapState>) => {
 
 describe('MapControls', () => {
   test('Renders all buttons', () => {
-    render(<MapControls />);
+    render(<MapControls handleSelect={jest.fn()} />);
     expect(screen.getByRole('button', {name: /undo/i})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: /redo/i})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: /clear/i})).toBeInTheDocument();

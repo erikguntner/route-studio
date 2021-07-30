@@ -80,6 +80,9 @@ export const mapSlice = createSlice({
       const {index, coords} = action.payload;
       state.points[index] = coords;
     },
+    updateFirstPoint: (state, action: PayloadAction<number[]>) => {
+      state.points[0] = action.payload;
+    },
     clearState: state => {
       state.points = initialState.points;
       state.lines = initialState.lines;
@@ -129,6 +132,6 @@ export const mapSlice = createSlice({
   },
 });
 
-export const {updatePoint, clearState} = mapSlice.actions;
+export const {updatePoint, updateFirstPoint, clearState} = mapSlice.actions;
 
 export const mapReducer = mapSlice.reducer;

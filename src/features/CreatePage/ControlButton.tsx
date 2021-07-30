@@ -31,8 +31,8 @@ export const ControlButton = ({
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keypress', handleKeyDown);
+    return () => window.removeEventListener('keypress', handleKeyDown);
   }, [handleClick]);
 
   return (

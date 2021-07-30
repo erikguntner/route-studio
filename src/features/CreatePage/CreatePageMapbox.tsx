@@ -10,6 +10,7 @@ import {ConnectingLines} from './ConnectingLines';
 import {Points} from './Points';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchRouteDataOnClick} from './mapSlice';
+import {DestinationMarker} from './DestinationMarker';
 interface Viewport {
   latitude: number;
   longitude: number;
@@ -27,7 +28,8 @@ export const CreatePageMapbox = () => {
   const [hoverInfo, setHoverInfo] =
     React.useState<[number, number] | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [index, setIndex] = React.useState<number>(0);
+  const [index, setIndex] = useState<number>(0);
+  const [searchPoint, setSearchPoint] = useState<number[] | null>(null);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -55,7 +57,7 @@ export const CreatePageMapbox = () => {
     [isDragging, hoverInfo, setHoverInfo, lines],
   );
 
-  const handleClick = async ({lngLat}: MapEvent) => {
+  const handleClick = async (lngLat: number[]) => {
     const coords =
       points.length > 0
         ? [points[points.length - 1], lngLat]
@@ -69,9 +71,19 @@ export const CreatePageMapbox = () => {
     }
   };
 
+  const handleSelect = (coords: [number, number]) => {
+    setSearchPoint(coords);
+    setViewport({...viewport, latitude: coords[1], longitude: coords[0]});
+  };
+
+  const addDestinationToRoute = (location: number[]) => {
+    handleClick(location);
+    setSearchPoint(null);
+  };
+
   return (
     <Wrapper>
-      <MapControls />
+      <MapControls handleSelect={handleSelect} />
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -82,7 +94,7 @@ export const CreatePageMapbox = () => {
         onViewportChange={(viewport: Viewport) => setViewport(viewport)}
         interactiveLayerIds={lines.map((_, i) => `path-layer-${i}`)}
         onHover={onHover}
-        onClick={handleClick}
+        onClick={e => handleClick(e.lngLat)}
       >
         <GeoJsonPath lines={lines} />
         {hoverInfo ? (
@@ -107,6 +119,12 @@ export const CreatePageMapbox = () => {
           lines={lines}
           setIsDragging={setIsDragging}
           setIndex={setIndex}
+        />
+        <DestinationMarker
+          location={searchPoint}
+          cancel={() => setSearchPoint(null)}
+          onClick={addDestinationToRoute}
+          setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
     </Wrapper>

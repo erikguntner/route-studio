@@ -7,20 +7,21 @@ import {Redo, Undo, Clear} from './Icons';
 import {LocationSearch} from './LocationSearch';
 import {clearState} from './mapSlice';
 
-export const MapControls = () => {
+interface Props {
+  handleSelect: (coords: [number, number]) => void;
+}
+
+export const MapControls = ({handleSelect}: Props) => {
   const {map} = useAppSelector(({map}) => ({map}));
   const dispatch = useAppDispatch();
-  const onSelect = (coords: [number, number]) => {
-    console.log(coords);
-  };
 
   return (
     <Wrapper>
-      <LocationSearch onSelect={onSelect} />
+      <LocationSearch onSelect={handleSelect} />
       <ControlButton
         onClick={() => dispatch(ActionCreators.redo())}
         label="redo"
-        keyCode="a"
+        keyCode=""
         disabled={map.future.length === 0}
       >
         <Redo />
@@ -28,7 +29,7 @@ export const MapControls = () => {
       <ControlButton
         onClick={() => dispatch(ActionCreators.undo())}
         label="undo"
-        keyCode="s"
+        keyCode=""
         disabled={map.past.length === 0}
       >
         <Undo />
@@ -36,7 +37,7 @@ export const MapControls = () => {
       <ControlButton
         onClick={() => dispatch(clearState())}
         label="clear"
-        keyCode="d"
+        keyCode=""
         disabled={map.present.points.length === 0}
       >
         <Clear />
