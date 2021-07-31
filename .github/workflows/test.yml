@@ -15,4 +15,8 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           start: yarn dev
+          record: true
           wait-on: 'http://localhost:3000'
+        env:
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
