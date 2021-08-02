@@ -1,7 +1,9 @@
 describe('Create Page', () => {
-  it('Should create point when selecting a searched destination', () => {
+  beforeEach(() => {
     cy.visit('/create');
+  });
 
+  it('Should create point when selecting a searched destination', () => {
     // checks buttons should be disabled
     cy.findByRole('button', {name: 'redo'}).should('be.disabled');
     cy.findByRole('button', {name: 'undo'}).should('be.disabled');
@@ -27,5 +29,10 @@ describe('Create Page', () => {
       cy.findByRole('button', {name: 'clear'}).click();
       cy.findAllByTestId('point').should('have.length', 0);
     });
+  });
+
+  it('should use geolocation to find user', () => {
+    cy.findByRole('button', {name: /geolcation/i}).click();
+    cy.findByTestId('user-marker', {timeout: 10000}).should('exist');
   });
 });
