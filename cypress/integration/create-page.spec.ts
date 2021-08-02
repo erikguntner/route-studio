@@ -9,7 +9,7 @@ describe('Create Page', () => {
 
     // Type into search box
     cy.findByRole('combobox', {name: /locations/i}).type('claremont');
-    cy.findByRole('listbox').within(() => {
+    cy.findByRole('listbox', {timeout: 8000}).within(() => {
       cy.findByText(/no results/i).should('not.exist');
       cy.findAllByRole('option').first().click();
     });
@@ -18,7 +18,7 @@ describe('Create Page', () => {
 
     cy.findByRole('main').within(() => {
       cy.findByRole('button', {name: /add point/i}).click();
-      cy.findAllByTestId('point').should('have.length', 1);
+      cy.findAllByTestId('point', {timeout: 8000}).should('have.length', 1);
 
       cy.findByRole('button', {name: 'redo'}).should('be.disabled');
       cy.findByRole('button', {name: 'undo'}).should('not.be.disabled');
