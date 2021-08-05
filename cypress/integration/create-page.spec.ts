@@ -18,7 +18,7 @@ describe('Create Page', () => {
     cy.findByRole('combobox', {name: /locations/i}).type('claremont');
     cy.findByRole('listbox', {timeout: 10000}).within(() => {
       cy.findByText(/no results/i).should('not.exist');
-      cy.findAllByRole('option').first().click();
+      cy.findAllByRole('option').eq(0).click();
     });
 
     cy.findByRole('listbox').should('not.exist');
@@ -40,6 +40,7 @@ describe('Create Page', () => {
 describe('geolocation', () => {
   describe('is allowed', () => {
     beforeEach(() => {
+      // mock a successful response from Geolocation API
       cy.visit('/create', {
         onBeforeLoad(win) {
           const latitude = 41.38879;
@@ -63,6 +64,7 @@ describe('geolocation', () => {
 
   describe('is blocked', () => {
     beforeEach(() => {
+      // mock an error response from Geolocation API
       cy.visit('/create', {
         onBeforeLoad(win) {
           cy.stub(win.navigator.geolocation, 'getCurrentPosition').callsFake(
@@ -73,6 +75,7 @@ describe('geolocation', () => {
         },
       });
 
+      // set Geolocation permissions to block
       Cypress.env({
         browserPermissions: {
           geolocation: 'block',
@@ -81,6 +84,7 @@ describe('geolocation', () => {
     });
 
     after(() => {
+      // reset Geolocation permissions to allow after tests run
       Cypress.env({
         browserPermissions: {
           geolocation: 'allow',
@@ -88,10 +92,12 @@ describe('geolocation', () => {
       });
     });
 
-    it('Shows error notification when geolocation is blocked', () => {
+    it('Shows error toast', () => {
       expect(isPermissionBlocked('geolocation')).to.be.true;
       cy.findByRole('button', {name: /locate/i}).click();
-      cy.findByTestId('toast');
+      cy.findByText(
+        'There was an error finding your location. Check your location permissions',
+      );
     });
   });
 });
