@@ -47,7 +47,7 @@ export const MapControls = ({handleSelect}: Props) => {
 };
 
 const Wrapper = styled.div`
-  height: 60px;
+  height: 100%;
   width: 100vw;
   z-index: 20;
   display: flex;

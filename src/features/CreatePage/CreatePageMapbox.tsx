@@ -4,6 +4,7 @@ import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {GeoJsonPath} from './GeoJsonPath';
 import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
+import {Toaster} from 'react-hot-toast';
 
 import {MapControls} from './MapControls';
 import {ConnectingLines} from './ConnectingLines';
@@ -11,7 +12,9 @@ import {Points} from './Points';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {fetchRouteDataOnClick} from './mapSlice';
 import {DestinationMarker} from './DestinationMarker';
-interface Viewport {
+import {GeolocationButton} from './GeolocationButton';
+import {UserMarker} from './UserMarker';
+export interface Viewport {
   latitude: number;
   longitude: number;
   zoom: number;
@@ -20,16 +23,19 @@ interface Viewport {
 }
 
 export const CreatePageMapbox = () => {
-  const [viewport, setViewport] = React.useState({
+  const [viewport, setViewport] = React.useState<Viewport>({
     latitude: 51.505,
     longitude: -0.09,
     zoom: 13,
+    bearing: 0,
+    pitch: 0,
   });
   const [hoverInfo, setHoverInfo] =
     React.useState<[number, number] | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
   const [searchPoint, setSearchPoint] = useState<number[] | null>(null);
+  const [userLocation, setUserLocation] = useState<number[] | null>(null);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -83,6 +89,11 @@ export const CreatePageMapbox = () => {
 
   return (
     <Wrapper>
+      <GeolocationButton
+        setUserLocation={setUserLocation}
+        setViewport={setViewport}
+        viewport={viewport}
+      />
       <MapControls handleSelect={handleSelect} />
       <ReactMapGL
         {...viewport}
@@ -96,6 +107,7 @@ export const CreatePageMapbox = () => {
         onHover={onHover}
         onClick={e => handleClick(e.lngLat)}
       >
+        <UserMarker userLocation={userLocation} />
         <GeoJsonPath lines={lines} />
         {hoverInfo ? (
           <Marker
@@ -127,15 +139,18 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
+      <Toaster position={'bottom-right'} />
     </Wrapper>
   );
 };
 
 const Wrapper = styled.div`
-  display: flex;
+  position: relative;
+  display: grid;
   flex-direction: column;
   height: calc(100vh - 66px);
   width: 100vw;
+  grid-template-rows: ${props => props.theme.controlsHeight} 1fr;
 `;
 
 const HoverInfo = styled.div`

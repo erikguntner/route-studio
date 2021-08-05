@@ -1,6 +1,7 @@
 import {DefaultTheme, createGlobalStyle} from 'styled-components';
 
 export const theme: DefaultTheme = {
+  controlsHeight: '48px',
   screens: {
     sm: '640px',
     md: '768px',

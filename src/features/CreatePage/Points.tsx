@@ -71,21 +71,23 @@ export const Points = ({
 
   return (
     <>
-      {points.map((point, i) => {
-        return (
-          <Marker
-            key={i}
-            draggable
-            latitude={point[1]}
-            longitude={point[0]}
-            onDragStart={e => handleDragStart(e, i)}
-            onDrag={e => handleDrag(e, i)}
-            onDragEnd={e => handleDragEnd(e, i)}
-          >
-            <Point data-testid="point" />
-          </Marker>
-        );
-      })}
+      {points.length > 0
+        ? points.map((point, i) => {
+            return (
+              <Marker
+                key={i}
+                draggable
+                latitude={point[1]}
+                longitude={point[0]}
+                onDragStart={e => handleDragStart(e, i)}
+                onDrag={e => handleDrag(e, i)}
+                onDragEnd={e => handleDragEnd(e, i)}
+              >
+                <Point data-testid="point" />
+              </Marker>
+            );
+          })
+        : null}
     </>
   );
 };
