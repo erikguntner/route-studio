@@ -139,7 +139,7 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
-      <Toaster position={'bottom-right'} />
+      <Toaster datatest-id="toast" position={'bottom-right'} />
     </Wrapper>
   );
 };

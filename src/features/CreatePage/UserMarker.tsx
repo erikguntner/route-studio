@@ -9,7 +9,7 @@ interface UserMarkerProps {
 export const UserMarker = ({userLocation}: UserMarkerProps) => {
   return userLocation ? (
     <Marker longitude={userLocation[0]} latitude={userLocation[1]}>
-      <Circle />
+      <Circle data-testid="user-marker" />
     </Marker>
   ) : null;
 };
@@ -19,5 +19,5 @@ const Circle = styled.div`
   width: 14px;
   border-radius: 50%;
   background-color: ${props => props.theme.colors.primary};
-  border: 3px solid ${props => props.theme.colors.white}; ;
+  border: 2px solid ${props => props.theme.colors.white}; ;
 `;

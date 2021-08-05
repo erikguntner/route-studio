@@ -3737,6 +3737,13 @@ csstype@^3.0.2, csstype@^3.0.6:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==
 
+cypress-browser-permissions@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/cypress-browser-permissions/-/cypress-browser-permissions-1.0.5.tgz#650f99936cafd5b807344958f9bc184625f07593"
+  integrity sha512-oF6QfCRxWoGYUhhSjIhqN4pCFMmg9ZxEmbqJZVbf/nZoKAchFAzvSSwxbAAe9RgiqJ23f5pDymy8o5Mr/mDw8w==
+  dependencies:
+    lodash "^4.17.19"
+
 cypress-social-logins@^1.11.3:
   version "1.11.3"
   resolved "https://registry.yarnpkg.com/cypress-social-logins/-/cypress-social-logins-1.11.3.tgz#3a4e1a8f74f87fa4e2355d742543f2e42c155d79"
@@ -6347,7 +6354,7 @@ lodash.truncate@^4.4.2:
   resolved "https://registry.yarnpkg.com/lodash.truncate/-/lodash.truncate-4.4.2.tgz#5a350da0b1113b837ecfffd5812cbe58d6eae193"
   integrity sha1-WjUNoLERO4N+z//VgSy+WNbq4ZM=
 
-lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.21, lodash@^4.7.0:
+lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.21, lodash@^4.7.0:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==

@@ -51,7 +51,11 @@ export const GeolocationButton = ({
       aria-label={'Locate user'}
       disabled={loading}
     >
-      {loading ? <div>loading</div> : <Geolocation />}
+      {loading ? (
+        <div aria-label="Loading user location">loading</div>
+      ) : (
+        <Geolocation />
+      )}
     </Button>
   );
 };

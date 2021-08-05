@@ -1,5 +1,10 @@
 {
   "baseUrl": "http://localhost:3000",
   "chromeWebSecurity": false,
-  "projectId": "e9r79v"
+  "projectId": "e9r79v",
+  "env": {
+    "browserPermissions": {
+      "geolocation": "allow"
+    }
+  }
 }
