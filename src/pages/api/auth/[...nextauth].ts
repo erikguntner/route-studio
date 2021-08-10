@@ -111,6 +111,16 @@ const options: NextAuthOptions = {
     }),
   ],
   adapter: PrismaAdapter(prisma),
+  callbacks: {
+    async session(session, user) {
+      if (!session?.user || !user) {
+        return session;
+      }
+
+      session.user.id = user.id as string;
+      return session;
+    },
+  },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) =>
