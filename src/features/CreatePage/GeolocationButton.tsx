@@ -50,9 +50,12 @@ export const GeolocationButton = ({
       onClick={getGeolocation}
       aria-label={'Locate user'}
       disabled={loading}
+      loading={loading}
     >
       {loading ? (
-        <div aria-label="Loading user location">loading</div>
+        <Spinner aria-label="Loading user location">
+          <div></div>
+        </Spinner>
       ) : (
         <Geolocation />
       )}
@@ -60,7 +63,7 @@ export const GeolocationButton = ({
   );
 };
 
-const Button = styled.button`
+const Button = styled.button<{loading: boolean}>`
   position: absolute;
   top: ${props => props.theme.controlsHeight};
   left: 0;
@@ -77,7 +80,7 @@ const Button = styled.button`
   margin: 8px;
 
   &:hover {
-    cursor: pointer;
+    cursor: ${props => (props.loading ? 'progress' : 'pointer')};
     color: ${props => props.theme.colors.black};
     &:not(:disabled) {
       background-color: ${props => props.theme.colors.gray[100]};
@@ -87,5 +90,25 @@ const Button = styled.button`
   &:focus {
     outline: none;
     box-shadow: ${props => props.theme.outline};
+  }
+`;
+
+const Spinner = styled.div`
+  position: relative;
+  height: 24px;
+  width: 24px;
+  border-radius: 50%;
+  border: 2px solid ${props => props.theme.colors.gray[200]};
+  border-right: 2px solid ${props => props.theme.colors.primary};
+  animation: 1s ease-in-out infinite rotate;
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+
+    to {
+      transform: rotate(360deg);
+    }
   }
 `;
