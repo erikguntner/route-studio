@@ -21,14 +21,14 @@
     ]
   },
   "dependencies": {
-    "@next-auth/prisma-adapter": "^0.4.4-canary.64",
+    "@next-auth/prisma-adapter": "^0.5.4",
     "@prisma/client": "^2.24.0",
     "@reach/combobox": "^0.15.3",
     "@reduxjs/toolkit": "^1.6.1",
     "@turf/turf": "^6.5.0",
     "leaflet": "^1.7.1",
     "next": "10.2.3",
-    "next-auth": "^3.24.1",
+    "next-auth": "^4.0.0-beta.2",
     "nodemailer": "^6.6.1",
     "prisma": "^2.24.0",
     "react": "17.0.2",

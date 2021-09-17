@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import {signIn, signOut, useSession} from 'next-auth/client';
+import {signIn, signOut, useSession} from 'next-auth/react';
 
 export const Header = () => {
-  const [session, loading] = useSession();
+  const {data: session, status} = useSession();
+  console.log(session);
 
   return (
     <Wrapper>
@@ -15,7 +16,7 @@ export const Header = () => {
         <Link href="/create">
           <NavLink>Create</NavLink>
         </Link>
-        {loading ? (
+        {status === 'loading' ? (
           <div>loading</div>
         ) : session ? (
           <SignOutButton
