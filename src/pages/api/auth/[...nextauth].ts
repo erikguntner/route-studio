@@ -1,4 +1,3 @@
-import {NextApiRequest, NextApiResponse} from 'next';
 import NextAuth, {NextAuthOptions} from 'next-auth';
 import Auth0Provider from 'next-auth/providers/auth0';
 import {PrismaAdapter} from '@next-auth/prisma-adapter';
@@ -11,7 +10,7 @@ const options: NextAuthOptions = {
     Auth0Provider({
       clientId: process.env.AUTH0_CLIENT_ID || '',
       clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
-      issuer: `https://${process.env.AUTH0_DOMAIN}/`,
+      issuer: process.env.AUTH0_DOMAIN,
     }),
   ],
   adapter: PrismaAdapter(prisma),
@@ -29,5 +28,4 @@ const options: NextAuthOptions = {
   },
 };
 
-export default (req: NextApiRequest, res: NextApiResponse) =>
-  NextAuth(req, res, options);
+export default NextAuth(options);

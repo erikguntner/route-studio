@@ -61,7 +61,7 @@ const createLineSegments = (
 //SLICE*******************************
 export interface MapState {
   points: number[][];
-  lines: number[][][];
+  lines: string[][][];
 }
 
 const initialState: MapState = {
