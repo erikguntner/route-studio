@@ -13,3 +13,5 @@ Cypress.Commands.add('login', () => {
   );
   Cypress.Cookies.preserveOnce('next-auth.session-token');
 });
+
+export {};
