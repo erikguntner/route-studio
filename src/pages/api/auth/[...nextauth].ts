@@ -10,14 +10,15 @@ const options: NextAuthOptions = {
     Auth0Provider({
       clientId: process.env.AUTH0_CLIENT_ID || '',
       clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
-      issuer: process.env.AUTH0_DOMAIN,
+      issuer: `https://${process.env.AUTH0_DOMAIN}`,
     }),
   ],
+  session: {
+    jwt: false,
+  },
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    async session({session, token, user}) {
-      console.log('session', session);
-      console.log(session, token, user);
+    async session({session, user}) {
       if (!session?.user || !user) {
         return session;
       }
