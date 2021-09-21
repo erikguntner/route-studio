@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import {signIn, signOut, useSession} from 'next-auth/react';
 
 export const Header = () => {
-  const {data: session, status} = useSession();
+  const {status} = useSession();
 
   return (
     <Wrapper>
@@ -17,7 +17,7 @@ export const Header = () => {
         </Link>
         {status === 'loading' ? (
           <div>loading</div>
-        ) : session ? (
+        ) : status === 'authenticated' ? (
           <SignOutButton
             href="/api/auth/signout"
             onClick={e => {
