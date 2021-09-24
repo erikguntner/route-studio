@@ -50,7 +50,7 @@ export const GeolocationButton = ({
       onClick={getGeolocation}
       aria-label={'Locate user'}
       disabled={loading}
-      loading={loading}
+      $loading={loading}
     >
       {loading ? (
         <Spinner aria-label="Loading user location">
@@ -63,7 +63,7 @@ export const GeolocationButton = ({
   );
 };
 
-const Button = styled.button<{loading: boolean}>`
+const Button = styled.button<{$loading: boolean}>`
   position: absolute;
   top: ${props => props.theme.controlsHeight};
   left: 0;
@@ -80,7 +80,7 @@ const Button = styled.button<{loading: boolean}>`
   margin: 8px;
 
   &:hover {
-    cursor: ${props => (props.loading ? 'progress' : 'pointer')};
+    cursor: ${props => (props.$loading ? 'progress' : 'pointer')};
     color: ${props => props.theme.colors.black};
     &:not(:disabled) {
       background-color: ${props => props.theme.colors.gray[100]};

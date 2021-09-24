@@ -1,9 +1,9 @@
-import React, {useState} from 'react';
+import React, {useState, useCallback} from 'react';
 import styled from 'styled-components';
 import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {GeoJsonPath} from './GeoJsonPath';
 import {lineString, point} from '@turf/helpers';
-import {pointToLineDistance} from '@turf/turf';
+import {pointToLineDistance, along} from '@turf/turf';
 import {Toaster} from 'react-hot-toast';
 
 import {MapControls} from './MapControls';
@@ -14,6 +14,7 @@ import {fetchRouteDataOnClick} from './mapSlice';
 import {DestinationMarker} from './DestinationMarker';
 import {GeolocationButton} from './GeolocationButton';
 import {UserMarker} from './UserMarker';
+import {ElevationGraph} from '../ElevationGraph';
 export interface Viewport {
   latitude: number;
   longitude: number;
@@ -36,6 +37,7 @@ export const CreatePageMapbox = () => {
   const [index, setIndex] = useState<number>(0);
   const [searchPoint, setSearchPoint] = useState<number[] | null>(null);
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
+  const [distanceAlongPath, setDistanceAlongPath] = useState<number>(0);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -87,6 +89,19 @@ export const CreatePageMapbox = () => {
     setSearchPoint(null);
   };
 
+  const getPointOnLineFromDistance = useCallback(() => {
+    if (distanceAlongPath === 0) {
+      return [];
+    }
+    const line = lineString(lines.flat());
+
+    const segment = along(line, distanceAlongPath, {units: 'meters'});
+
+    return segment.geometry.coordinates;
+  }, [distanceAlongPath]);
+
+  const pointAlongPath = getPointOnLineFromDistance();
+
   return (
     <Wrapper>
       <GeolocationButton
@@ -126,6 +141,12 @@ export const CreatePageMapbox = () => {
           index={index}
           isDragging={isDragging}
         />
+        {pointAlongPath.length ? (
+          <Marker longitude={pointAlongPath[0]} latitude={pointAlongPath[1]}>
+            <Label>{distanceAlongPath.toFixed(2)}</Label>
+            <DistanceMarker />
+          </Marker>
+        ) : null}
         <Points
           points={points}
           lines={lines}
@@ -139,6 +160,16 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
+      <ElevationWrapper>
+        <ElevationGraph
+          {...{
+            showElevation: true,
+            lines,
+            units: 'meters',
+            setDistanceAlongPath,
+          }}
+        />
+      </ElevationWrapper>
       <Toaster datatest-id="toast" position={'bottom-right'} />
     </Wrapper>
   );
@@ -165,4 +196,39 @@ const HoverInfo = styled.div`
   &:hover {
     cursor: pointer;
   }
+`;
+
+const ElevationWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 35vh;
+  width: 100%;
+
+  @media screen and (max-width: ${props => props.theme.screens.md}) {
+    height: 25vh;
+  }
+`;
+
+const Label = styled.div`
+  position: absolute;
+  background-color: #333;
+  opacity: 0.9;
+  padding: 2px 6px;
+  color: #fff;
+  font-size: 10px;
+  border-radius: 5px;
+  transform: translate3d(-50%, -150%, 0);
+`;
+
+const DistanceMarker = styled.div`
+  font-size: 1rem;
+  line-height: 1;
+  background-color: #fff;
+  height: 14px;
+  width: 14px;
+  border-radius: 10px;
+  border: 2px solid ${props => props.theme.colors.primary};
+  transform: translate3d(-50%, -50%, 0);
 `;
