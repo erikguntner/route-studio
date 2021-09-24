@@ -2,9 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "lib": ["es5", "dom"],
-    // be explicit about types included
-    // to avoid clashing with Jest types
+    "isolatedModules": false,
     "types": ["cypress", "@testing-library/cypress"]
   },
-  "include": ["**/*.ts"]
+  "include": ["../node_modules/cypress", "**/*.ts"]
 }

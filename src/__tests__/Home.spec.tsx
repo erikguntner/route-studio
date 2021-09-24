@@ -1,10 +1,11 @@
 import {render, screen} from '../utils/test/test-utils';
 import Home from '../pages/index';
-import {useSession} from 'next-auth/client';
-jest.mock('next-auth/client');
+import {useSession} from 'next-auth/react';
+jest.mock('next-auth/react');
 
 describe('Home Page', () => {
   test('Renders correctly when signed out', () => {
+    //TODO: update to use new useSession API
     (useSession as jest.Mock).mockReturnValueOnce([null, false]);
 
     render(<Home />);

@@ -1,17 +1,16 @@
 import {render, screen} from '../utils/test/test-utils';
-import {useSession} from 'next-auth/client';
+import {useSession, SessionContextValue} from 'next-auth/react';
 import {Header} from '../features/Layout/Header';
-import {Session} from 'next-auth';
-jest.mock('next-auth/client');
+jest.mock('next-auth/react');
 
-const setup = (config: [Session | null, boolean]) => {
+const setup = (config: SessionContextValue) => {
   (useSession as jest.Mock).mockReturnValueOnce(config);
   render(<Header />);
 };
 
 describe('Nav component', () => {
-  test('Renders Sign In button when session exists', () => {
-    setup([null, false]);
+  test('Renders Sign In button when no session exists', () => {
+    setup({data: null, status: 'unauthenticated'});
 
     expect(screen.getByRole('button', {name: /sign in/i})).toBeInTheDocument();
     expect(
@@ -20,7 +19,7 @@ describe('Nav component', () => {
   });
 
   it('Renders Sign Out button when a session exists', () => {
-    setup([{}, false]);
+    setup({data: {}, status: 'authenticated'});
 
     expect(
       screen.queryByRole('button', {name: /sign in/i}),

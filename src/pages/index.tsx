@@ -1,9 +1,9 @@
 import Link from 'next/link';
 import styled from 'styled-components';
-import {useSession} from 'next-auth/client';
+import {useSession} from 'next-auth/react';
 
 export default function Home() {
-  const [session] = useSession();
+  const {data: session} = useSession();
 
   return (
     <Container>
