@@ -24,21 +24,22 @@ export interface Viewport {
   pitch: number;
 }
 
-export const CreatePageMapbox = () => {
-  const [viewport, setViewport] = React.useState<Viewport>({
+const CreatePageMapbox = () => {
+  const [viewport, setViewport] = useState<Viewport>({
     latitude: 51.505,
     longitude: -0.09,
     zoom: 13,
     bearing: 0,
     pitch: 0,
   });
-  const [hoverInfo, setHoverInfo] =
-    React.useState<[number, number] | null>(null);
+  const [hoverInfo, setHoverInfo] = useState<[number, number] | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
   const [searchPoint, setSearchPoint] = useState<number[] | null>(null);
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
   const [distanceAlongPath, setDistanceAlongPath] = useState<number>(0);
+  const [elevationGraphToggle, setElevationGraphToggle] =
+    useState<boolean>(false);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -90,6 +91,10 @@ export const CreatePageMapbox = () => {
     setSearchPoint(null);
   };
 
+  const toggleElevationGraph = () => {
+    setElevationGraphToggle(!elevationGraphToggle);
+  };
+
   return (
     <Wrapper>
       <GeolocationButton
@@ -97,7 +102,10 @@ export const CreatePageMapbox = () => {
         setViewport={setViewport}
         viewport={viewport}
       />
-      <MapControls handleSelect={handleSelect} />
+      <MapControls
+        handleSelect={handleSelect}
+        toggleElevationGraph={toggleElevationGraph}
+      />
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -143,20 +151,21 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
-      <ElevationWrapper>
-        <ElevationGraph
-          {...{
-            showElevation: true,
-            lines,
-            units: 'meters',
-            setDistanceAlongPath,
-          }}
-        />
-      </ElevationWrapper>
+      {elevationGraphToggle ? (
+        <ElevationWrapper>
+          <ElevationGraph
+            lines={lines}
+            units={'meters'}
+            setDistanceAlongPath={setDistanceAlongPath}
+          />
+        </ElevationWrapper>
+      ) : null}
       <Toaster datatest-id="toast" position={'bottom-right'} />
     </Wrapper>
   );
 };
+
+export default CreatePageMapbox;
 
 const Wrapper = styled.div`
   position: relative;
@@ -191,5 +200,9 @@ const ElevationWrapper = styled.div`
 
   @media screen and (max-width: ${props => props.theme.screens.md}) {
     height: 25vh;
+  }
+
+  @media screen and (max-width: ${props => props.theme.screens.sm}) {
+    display: none;
   }
 `;

@@ -1,14 +1,14 @@
-// import dynamic from 'next/dynamic';
-import {CreatePageMapbox} from '../features/CreatePage/CreatePageMapbox';
+import dynamic from 'next/dynamic';
+// import {CreatePageMapbox} from '../features/CreatePage/CreatePageMapbox';
 
 const Create = () => {
-  // const CreatePage = dynamic(
-  //   () => import('../features/CreatePage/CreatePage'),
-  //   {
-  //     ssr: false,
-  //   },
-  // );
-  return <CreatePageMapbox />;
+  const CreatePage = dynamic(
+    () => import('../features/CreatePage/CreatePageMapbox'),
+    {
+      ssr: true,
+    },
+  );
+  return <CreatePage />;
 };
 
 export default Create;

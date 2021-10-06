@@ -9,9 +9,10 @@ import {clearState} from './mapSlice';
 
 interface Props {
   handleSelect: (coords: [number, number]) => void;
+  toggleElevationGraph: () => void;
 }
 
-export const MapControls = ({handleSelect}: Props) => {
+export const MapControls = ({handleSelect, toggleElevationGraph}: Props) => {
   const {map} = useAppSelector(({map}) => ({map}));
   const dispatch = useAppDispatch();
 
@@ -39,6 +40,13 @@ export const MapControls = ({handleSelect}: Props) => {
         label="clear"
         keyCode=""
         disabled={map.present.points.length === 0}
+      >
+        <Clear />
+      </ControlButton>
+      <ControlButton
+        onClick={toggleElevationGraph}
+        label="elevation graph"
+        keyCode=""
       >
         <Clear />
       </ControlButton>

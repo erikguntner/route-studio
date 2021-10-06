@@ -18,7 +18,6 @@ import {Axis} from './Axis';
 import parseElevationData from '../../utils/parseElevationData';
 
 export interface Props {
-  showElevation?: boolean | null;
   lines: number[][][];
   units: string;
   setDistanceAlongPath: Dispatch<SetStateAction<number>>;
@@ -52,7 +51,6 @@ const getPositionOnLine = (
 };
 
 export const ElevationGraph: React.FC<Props> = ({
-  showElevation = true,
   lines,
   units,
   setDistanceAlongPath,
@@ -148,11 +146,10 @@ export const ElevationGraph: React.FC<Props> = ({
     setDistanceAlongPath(0);
   };
 
-  // const orientation = defineOrientation();
+  console.log(lines);
 
   return (
     <ChartContainer
-      {...{showElevation}}
       className="line-chart-container"
       id="elevation-container"
       // @ts-ignore
