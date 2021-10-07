@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {ActionCreators} from 'redux-undo';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {ControlButton} from './ControlButton';
-import {Redo, Undo, Clear} from './Icons';
+import {Redo, Undo, Clear, TrendingUp} from './Icons';
 import {LocationSearch} from './LocationSearch';
 import {clearState} from './mapSlice';
 
@@ -49,7 +49,7 @@ export const MapControls = ({handleSelect, toggleElevationGraph}: Props) => {
           label="elevation graph"
           keyCode=""
         >
-          <Clear />
+          <TrendingUp />
         </ControlButton>
       </HideOnMobile>
     </Wrapper>
