@@ -43,16 +43,26 @@ export const MapControls = ({handleSelect, toggleElevationGraph}: Props) => {
       >
         <Clear />
       </ControlButton>
-      <ControlButton
-        onClick={toggleElevationGraph}
-        label="elevation graph"
-        keyCode=""
-      >
-        <Clear />
-      </ControlButton>
+      <HideOnMobile>
+        <ControlButton
+          onClick={toggleElevationGraph}
+          label="elevation graph"
+          keyCode=""
+        >
+          <Clear />
+        </ControlButton>
+      </HideOnMobile>
     </Wrapper>
   );
 };
+
+const HideOnMobile = styled.div`
+  display: inline-block;
+
+  @media screen and (max-width: ${props => props.theme.screens.sm}) {
+    display: none;
+  }
+`;
 
 const Wrapper = styled.div`
   height: 100%;
