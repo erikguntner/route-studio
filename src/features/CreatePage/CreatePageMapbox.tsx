@@ -4,7 +4,6 @@ import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
 import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 import {Toaster} from 'react-hot-toast';
-import Portal from '@reach/portal';
 
 import {GeoJsonPath} from './GeoJsonPath';
 import {MapControls} from './MapControls';
@@ -17,6 +16,7 @@ import {GeolocationButton} from './GeolocationButton';
 import {UserMarker} from './UserMarker';
 import {ElevationGraph} from '../ElevationGraph';
 import {PointAlongPath} from './PointAlongPath';
+import {ElevationGraphPortal} from './ElevationGraphPortal';
 export interface Viewport {
   latitude: number;
   longitude: number;
@@ -152,17 +152,16 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
-      {elevationGraphToggle ? (
-        <Portal>
-          <ElevationWrapper>
-            <ElevationGraph
-              lines={lines}
-              units={'meters'}
-              setDistanceAlongPath={setDistanceAlongPath}
-            />
-          </ElevationWrapper>
-        </Portal>
-      ) : null}
+      <ElevationGraphPortal
+        elevationGraphToggle={elevationGraphToggle}
+        lines={lines}
+      >
+        <ElevationGraph
+          lines={lines}
+          units={'meters'}
+          setDistanceAlongPath={setDistanceAlongPath}
+        />
+      </ElevationGraphPortal>
       <Toaster datatest-id="toast" position={'bottom-right'} />
     </Wrapper>
   );
@@ -188,22 +187,5 @@ const HoverInfo = styled.div`
 
   &:hover {
     cursor: pointer;
-  }
-`;
-
-const ElevationWrapper = styled.div`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 35vh;
-  width: 100vw;
-
-  @media screen and (max-width: ${props => props.theme.screens.md}) {
-    height: 25vh;
-  }
-
-  @media screen and (max-width: ${props => props.theme.screens.sm}) {
-    display: none;
   }
 `;

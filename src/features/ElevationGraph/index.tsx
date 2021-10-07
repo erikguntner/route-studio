@@ -155,121 +155,103 @@ export const ElevationGraph: React.FC<Props> = ({
       // @ts-ignore
       ref={ref}
     >
-      {lines.length > 0 ? (
-        <svg
-          data-testid="elevation-profile"
-          className="line-chart"
-          width={width}
-          height={height}
-        >
-          <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
-            <rect width={boundedWidth} height={boundedHeight} fill="#f8f8f8" />
-            <g
-              style={{transform: 'rotate(90deg)'}}
-              transform={`translate(${[0, boundedHeight].join(',')})`}
-            >
-              <Axis domain={yScale.domain()} range={yScale.range()} axis="y" />
-            </g>
-            <g
-              style={{padding: '20px'}}
-              transform={`translate(${[0, boundedHeight].join(',')})`}
-            >
-              <Axis domain={xScale.domain()} range={xScale.range()} />
-            </g>
-          </g>
-          <path
-            id="profile"
-            transform={`translate(${[marginLeft, marginTop].join(',')})`}
-            d={generatedLine}
-            stroke="#0070f3"
-            strokeWidth={4}
-            fill="none"
-          />
-          <path
-            transform={`translate(${[marginLeft, marginTop].join(',')})`}
-            d={generatedArea}
-            fill="rgba(0, 112, 243, 0.1)"
-          />
+      <svg
+        data-testid="elevation-profile"
+        className="line-chart"
+        width={width}
+        height={height}
+      >
+        <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
+          <rect width={boundedWidth} height={boundedHeight} fill="#f8f8f8" />
           <g
-            id="mouse-group"
-            transform={`translate(${[marginLeft, marginTop].join(',')})`}
+            style={{transform: 'rotate(90deg)'}}
+            transform={`translate(${[0, boundedHeight].join(',')})`}
           >
-            <path
-              id="mouse-line"
-              style={{opacity: 0, transition: 'opacity 0.1s ease'}}
-              strokeWidth={1}
-              stroke="#718096"
-            />
-            <g id="mouse" style={{opacity: 0, transition: 'opacity 0.1s ease'}}>
-              <circle r={7} stroke="#fff" strokeWidth={2} fill="#444" />
-              <rect
-                height={40}
-                width={80}
-                transform={
-                  contentOrientation === 'right'
-                    ? 'translate(15 -20)'
-                    : 'translate(-94 -20)'
-                }
-                stroke="black"
-                fill="#fff"
-              />
-              {/* `translate(-86 -5)` */}
-              <text
-                transform={
-                  contentOrientation === 'right'
-                    ? 'translate(23 -5)'
-                    : 'translate(-86 -5)'
-                }
-                id="elevation-text"
-                height={11}
-              ></text>
-              {/* `translate(-86 10)` */}
-              <text
-                transform={
-                  contentOrientation === 'right'
-                    ? 'translate(23 10)'
-                    : 'translate(-86 10)'
-                }
-                id="distance-text"
-                height={11}
-              ></text>
-            </g>
+            <Axis domain={yScale.domain()} range={yScale.range()} axis="y" />
           </g>
-          <rect
-            id="overlay"
-            transform={`translate(${[marginLeft, marginTop].join(',')})`}
-            width={boundedWidth}
-            height={boundedHeight}
-            fill="none"
-            pointerEvents="all"
-            onMouseOver={handleMouseEnter}
-            onPointerDown={handleMouseEnter}
-            onMouseMove={handleMouseMove}
-            onPointerMove={handleMouseMove}
-            onMouseOut={handleMouseLeave}
-            onPointerUp={handleMouseLeave}
+          <g
+            style={{padding: '20px'}}
+            transform={`translate(${[0, boundedHeight].join(',')})`}
+          >
+            <Axis domain={xScale.domain()} range={xScale.range()} />
+          </g>
+        </g>
+        <path
+          id="profile"
+          transform={`translate(${[marginLeft, marginTop].join(',')})`}
+          d={generatedLine}
+          stroke="#0070f3"
+          strokeWidth={4}
+          fill="none"
+        />
+        <path
+          transform={`translate(${[marginLeft, marginTop].join(',')})`}
+          d={generatedArea}
+          fill="rgba(0, 112, 243, 0.1)"
+        />
+        <g
+          id="mouse-group"
+          transform={`translate(${[marginLeft, marginTop].join(',')})`}
+        >
+          <path
+            id="mouse-line"
+            style={{opacity: 0, transition: 'opacity 0.1s ease'}}
+            strokeWidth={1}
+            stroke="#718096"
           />
-        </svg>
-      ) : (
-        <Text>Create a line to see the elevation chart</Text>
-      )}
+          <g id="mouse" style={{opacity: 0, transition: 'opacity 0.1s ease'}}>
+            <circle r={7} stroke="#fff" strokeWidth={2} fill="#444" />
+            <rect
+              height={40}
+              width={80}
+              transform={
+                contentOrientation === 'right'
+                  ? 'translate(15 -20)'
+                  : 'translate(-94 -20)'
+              }
+              stroke="black"
+              fill="#fff"
+            />
+            {/* `translate(-86 -5)` */}
+            <text
+              transform={
+                contentOrientation === 'right'
+                  ? 'translate(23 -5)'
+                  : 'translate(-86 -5)'
+              }
+              id="elevation-text"
+              height={11}
+            ></text>
+            {/* `translate(-86 10)` */}
+            <text
+              transform={
+                contentOrientation === 'right'
+                  ? 'translate(23 10)'
+                  : 'translate(-86 10)'
+              }
+              id="distance-text"
+              height={11}
+            ></text>
+          </g>
+        </g>
+        <rect
+          id="overlay"
+          transform={`translate(${[marginLeft, marginTop].join(',')})`}
+          width={boundedWidth}
+          height={boundedHeight}
+          fill="none"
+          pointerEvents="all"
+          onMouseOver={handleMouseEnter}
+          onPointerDown={handleMouseEnter}
+          onMouseMove={handleMouseMove}
+          onPointerMove={handleMouseMove}
+          onMouseOut={handleMouseLeave}
+          onPointerUp={handleMouseLeave}
+        />
+      </svg>
     </ChartContainer>
   );
 };
-
-const Text = styled.p`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 2.4rem;
-  color: ${props => props.theme.colors.gray[600]};
-
-  @media screen and (max-width: ${props => props.theme.screens.md}) {
-    font-size: 1.8rem;
-  }
-`;
 
 const ChartContainer = styled.div`
   position: relative;
