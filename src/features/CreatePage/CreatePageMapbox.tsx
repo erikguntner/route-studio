@@ -24,7 +24,7 @@ export interface Viewport {
   pitch: number;
 }
 
-const CreatePageMapbox = () => {
+export const CreatePageMapbox = () => {
   const [viewport, setViewport] = useState<Viewport>({
     latitude: 51.505,
     longitude: -0.09,
@@ -165,8 +165,6 @@ const CreatePageMapbox = () => {
   );
 };
 
-export default CreatePageMapbox;
-
 const Wrapper = styled.div`
   position: relative;
   display: grid;
@@ -196,7 +194,7 @@ const ElevationWrapper = styled.div`
   left: 0;
   right: 0;
   height: 35vh;
-  width: 100%;
+  width: 100vw;
 
   @media screen and (max-width: ${props => props.theme.screens.md}) {
     height: 25vh;
