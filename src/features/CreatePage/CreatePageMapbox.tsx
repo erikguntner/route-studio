@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
-import {GeoJsonPath} from './GeoJsonPath';
 import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 import {Toaster} from 'react-hot-toast';
+import Portal from '@reach/portal';
 
+import {GeoJsonPath} from './GeoJsonPath';
 import {MapControls} from './MapControls';
 import {ConnectingLines} from './ConnectingLines';
 import {Points} from './Points';
@@ -152,13 +153,15 @@ export const CreatePageMapbox = () => {
         />
       </ReactMapGL>
       {elevationGraphToggle ? (
-        <ElevationWrapper>
-          <ElevationGraph
-            lines={lines}
-            units={'meters'}
-            setDistanceAlongPath={setDistanceAlongPath}
-          />
-        </ElevationWrapper>
+        <Portal>
+          <ElevationWrapper>
+            <ElevationGraph
+              lines={lines}
+              units={'meters'}
+              setDistanceAlongPath={setDistanceAlongPath}
+            />
+          </ElevationWrapper>
+        </Portal>
       ) : null}
       <Toaster datatest-id="toast" position={'bottom-right'} />
     </Wrapper>
