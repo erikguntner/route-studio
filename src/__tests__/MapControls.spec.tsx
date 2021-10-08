@@ -5,7 +5,7 @@ import {MapState} from '../features/CreatePage/mapSlice';
 import {MapControls} from '../features/CreatePage/MapControls';
 import {render, screen, userEvent} from '../utils/test/test-utils';
 
-const setup = (history: StateWithHistory<MapState>) => {
+const setup = (history: Partial<StateWithHistory<MapState>> = {}) => {
   const preloadedState:
     | CombinedState<{
         counter: CounterState;
@@ -16,19 +16,31 @@ const setup = (history: StateWithHistory<MapState>) => {
       value: 0,
       status: 'idle',
     },
-    map: history,
+    map: {
+      past: [],
+      present: {points: [], lines: []},
+      future: [],
+      ...history,
+    },
   };
 
-  render(<MapControls handleSelect={jest.fn()} />, {
-    preloadedState,
-  });
+  render(
+    <MapControls
+      isElevationGraphOpen={false}
+      toggleElevationGraph={jest.fn()}
+      handleSelect={jest.fn()}
+    />,
+    {
+      preloadedState,
+    },
+  );
 
   return {preloadedState};
 };
 
 describe('MapControls', () => {
   test('Renders all buttons', () => {
-    render(<MapControls handleSelect={jest.fn()} />);
+    setup();
     expect(screen.getByRole('button', {name: /undo/i})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: /redo/i})).toBeInTheDocument();
     expect(screen.getByRole('button', {name: /clear/i})).toBeInTheDocument();
