@@ -17,7 +17,7 @@ import {useChartDimensions} from './useChartDimensions';
 import {Axis} from './Axis';
 import parseElevationData from '../../utils/parseElevationData';
 
-export interface Props {
+export interface ElevationGraphProps {
   lines: number[][][];
   units: string;
   setDistanceAlongPath: Dispatch<SetStateAction<number>>;
@@ -50,11 +50,11 @@ const getPositionOnLine = (
   return {x: position.x, y: position.y};
 };
 
-export const ElevationGraph: React.FC<Props> = ({
+export const ElevationGraph = ({
   lines,
   units,
   setDistanceAlongPath,
-}) => {
+}: ElevationGraphProps) => {
   const [contentOrientation, setContentOrientation] =
     useState<'left' | 'right'>('left');
 
@@ -146,8 +146,6 @@ export const ElevationGraph: React.FC<Props> = ({
     setDistanceAlongPath(0);
   };
 
-  console.log(lines);
-
   return (
     <ChartContainer
       className="line-chart-container"
@@ -161,6 +159,7 @@ export const ElevationGraph: React.FC<Props> = ({
         width={width}
         height={height}
       >
+        <title>Line chart for elevation data</title>
         <g transform={`translate(${[marginLeft, marginTop].join(',')})`}>
           <rect width={boundedWidth} height={boundedHeight} fill="#f8f8f8" />
           <g

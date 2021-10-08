@@ -2,25 +2,25 @@ import React from 'react';
 import Portal from '@reach/portal';
 import styled from 'styled-components';
 
-interface ElevationGraphPortalProps {
-  elevationGraphToggle: boolean;
+export interface ElevationGraphPortalProps {
+  open: boolean;
   lines: number[][][];
 }
 
 export const ElevationGraphPortal = ({
-  elevationGraphToggle,
+  open,
   lines,
   children,
 }: React.PropsWithChildren<ElevationGraphPortalProps>) => {
   return (
     <>
-      {elevationGraphToggle ? (
+      {open ? (
         <Portal>
           <ElevationWrapper>
             {lines.length === 0 ? (
               <Text>Create a line to see the elevation chart</Text>
             ) : (
-              {children}
+              <>{children}</>
             )}
           </ElevationWrapper>
         </Portal>
@@ -47,7 +47,7 @@ const ElevationWrapper = styled.div`
   }
 `;
 
-const Text = styled.p`
+const Text = styled.h3`
   width: 100%;
   height: 100%;
   display: flex;

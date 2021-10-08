@@ -39,7 +39,7 @@ export const CreatePageMapbox = () => {
   const [searchPoint, setSearchPoint] = useState<number[] | null>(null);
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
   const [distanceAlongPath, setDistanceAlongPath] = useState<number>(0);
-  const [elevationGraphToggle, setElevationGraphToggle] =
+  const [isElevationGraphOpen, setIsElevationGraphOpen] =
     useState<boolean>(false);
 
   const {points, lines} = useAppSelector(({map}) => ({
@@ -93,7 +93,7 @@ export const CreatePageMapbox = () => {
   };
 
   const toggleElevationGraph = () => {
-    setElevationGraphToggle(!elevationGraphToggle);
+    setIsElevationGraphOpen(!isElevationGraphOpen);
   };
 
   return (
@@ -152,10 +152,7 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
-      <ElevationGraphPortal
-        elevationGraphToggle={elevationGraphToggle}
-        lines={lines}
-      >
+      <ElevationGraphPortal open={isElevationGraphOpen} lines={lines}>
         <ElevationGraph
           lines={lines}
           units={'meters'}
