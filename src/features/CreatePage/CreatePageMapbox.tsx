@@ -106,6 +106,7 @@ export const CreatePageMapbox = () => {
       <MapControls
         handleSelect={handleSelect}
         toggleElevationGraph={toggleElevationGraph}
+        isElevationGraphOpen={isElevationGraphOpen}
       />
       <ReactMapGL
         {...viewport}
