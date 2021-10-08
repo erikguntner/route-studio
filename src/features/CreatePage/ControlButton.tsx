@@ -55,6 +55,7 @@ const Button = styled.button`
   height: 100%;
   background-color: #fff;
   color: ${props => props.theme.colors.gray[600]};
+  transition: all 0.2s ease;
 
   &:not(:last-child) {
     border-right: 1px solid ${props => props.theme.colors.gray[200]};
@@ -65,6 +66,17 @@ const Button = styled.button`
     color: ${props => props.theme.colors.black};
     &:not(:disabled) {
       background-color: ${props => props.theme.colors.gray[100]};
+    }
+  }
+
+  &[aria-pressed='true'] {
+    background-color: ${({theme}) => theme.colors.blue[50]};
+    color: ${props => props.theme.colors.primary};
+
+    &:hover {
+      cursor: pointer;
+      background-color: ${({theme}) => theme.colors.blue[50]};
+      color: ${props => props.theme.colors.blue[500]};
     }
   }
 
