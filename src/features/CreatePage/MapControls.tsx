@@ -3,15 +3,21 @@ import styled from 'styled-components';
 import {ActionCreators} from 'redux-undo';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {ControlButton} from './ControlButton';
-import {Redo, Undo, Clear} from './Icons';
+import {Redo, Undo, Clear, TrendingUp} from './Icons';
 import {LocationSearch} from './LocationSearch';
 import {clearState} from './mapSlice';
 
-interface Props {
+interface MapControlsProps {
   handleSelect: (coords: [number, number]) => void;
+  toggleElevationGraph: () => void;
+  isElevationGraphOpen: boolean;
 }
 
-export const MapControls = ({handleSelect}: Props) => {
+export const MapControls = ({
+  handleSelect,
+  toggleElevationGraph,
+  isElevationGraphOpen,
+}: MapControlsProps) => {
   const {map} = useAppSelector(({map}) => ({map}));
   const dispatch = useAppDispatch();
 
@@ -42,9 +48,27 @@ export const MapControls = ({handleSelect}: Props) => {
       >
         <Clear />
       </ControlButton>
+      <HideOnMobile>
+        <ControlButton
+          onClick={toggleElevationGraph}
+          label="elevation graph"
+          aria-pressed={isElevationGraphOpen}
+          keyCode=""
+        >
+          <TrendingUp />
+        </ControlButton>
+      </HideOnMobile>
     </Wrapper>
   );
 };
+
+const HideOnMobile = styled.div`
+  display: inline-block;
+
+  @media screen and (max-width: ${props => props.theme.screens.sm}) {
+    display: none;
+  }
+`;
 
 const Wrapper = styled.div`
   height: 100%;

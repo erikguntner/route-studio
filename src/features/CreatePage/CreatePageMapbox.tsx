@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
 import ReactMapGL, {Marker, MapEvent} from 'react-map-gl';
-import {GeoJsonPath} from './GeoJsonPath';
 import {lineString, point} from '@turf/helpers';
 import {pointToLineDistance} from '@turf/turf';
 import {Toaster} from 'react-hot-toast';
 
+import {GeoJsonPath} from './GeoJsonPath';
 import {MapControls} from './MapControls';
 import {ConnectingLines} from './ConnectingLines';
 import {Points} from './Points';
@@ -14,6 +14,9 @@ import {fetchRouteDataOnClick} from './mapSlice';
 import {DestinationMarker} from './DestinationMarker';
 import {GeolocationButton} from './GeolocationButton';
 import {UserMarker} from './UserMarker';
+import {ElevationGraph} from '../ElevationGraph';
+import {PointAlongPath} from './PointAlongPath';
+import {ElevationGraphPortal} from './ElevationGraphPortal';
 export interface Viewport {
   latitude: number;
   longitude: number;
@@ -23,19 +26,21 @@ export interface Viewport {
 }
 
 export const CreatePageMapbox = () => {
-  const [viewport, setViewport] = React.useState<Viewport>({
+  const [viewport, setViewport] = useState<Viewport>({
     latitude: 51.505,
     longitude: -0.09,
     zoom: 13,
     bearing: 0,
     pitch: 0,
   });
-  const [hoverInfo, setHoverInfo] =
-    React.useState<[number, number] | null>(null);
+  const [hoverInfo, setHoverInfo] = useState<[number, number] | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [index, setIndex] = useState<number>(0);
   const [searchPoint, setSearchPoint] = useState<number[] | null>(null);
   const [userLocation, setUserLocation] = useState<number[] | null>(null);
+  const [distanceAlongPath, setDistanceAlongPath] = useState<number>(0);
+  const [isElevationGraphOpen, setIsElevationGraphOpen] =
+    useState<boolean>(false);
 
   const {points, lines} = useAppSelector(({map}) => ({
     points: map.present.points,
@@ -87,6 +92,10 @@ export const CreatePageMapbox = () => {
     setSearchPoint(null);
   };
 
+  const toggleElevationGraph = () => {
+    setIsElevationGraphOpen(!isElevationGraphOpen);
+  };
+
   return (
     <Wrapper>
       <GeolocationButton
@@ -94,7 +103,11 @@ export const CreatePageMapbox = () => {
         setViewport={setViewport}
         viewport={viewport}
       />
-      <MapControls handleSelect={handleSelect} />
+      <MapControls
+        handleSelect={handleSelect}
+        toggleElevationGraph={toggleElevationGraph}
+        isElevationGraphOpen={isElevationGraphOpen}
+      />
       <ReactMapGL
         {...viewport}
         mapboxApiAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
@@ -132,6 +145,7 @@ export const CreatePageMapbox = () => {
           setIsDragging={setIsDragging}
           setIndex={setIndex}
         />
+        <PointAlongPath distanceAlongPath={distanceAlongPath} lines={lines} />
         <DestinationMarker
           location={searchPoint}
           cancel={() => setSearchPoint(null)}
@@ -139,6 +153,13 @@ export const CreatePageMapbox = () => {
           setSearchPoint={setSearchPoint}
         />
       </ReactMapGL>
+      <ElevationGraphPortal open={isElevationGraphOpen} lines={lines}>
+        <ElevationGraph
+          lines={lines}
+          units={'meters'}
+          setDistanceAlongPath={setDistanceAlongPath}
+        />
+      </ElevationGraphPortal>
       <Toaster datatest-id="toast" position={'bottom-right'} />
     </Wrapper>
   );
