@@ -109,6 +109,7 @@ export const GlobalStyle = createGlobalStyle`
 
   body {
     line-height: 1;
+    color: ${theme.colors.gray[900]};
   }
 
   ol, ul {
@@ -134,6 +135,7 @@ export const GlobalStyle = createGlobalStyle`
   *,
   *:before,
   *:after {
+    position: relative;
     box-sizing: border-box;
     line-height: 1.45;
     -webkit-font-smoothing: antialiased;
