@@ -20,11 +20,7 @@ export const Layout = ({children}: Props) => {
       </Head>
       <Header />
       <main>{children}</main>
-      {router.route !== '/create' ? (
-        <footer>
-          <div>Footer</div>
-        </footer>
-      ) : null}
+      {router.route !== '/create' ? <footer></footer> : null}
     </Container>
   );
 };
