@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import {ActionCreators} from 'redux-undo';
 import {useAppDispatch, useAppSelector} from '../../app/hooks';
 import {ControlButton} from './ControlButton';
-import {Redo, Undo, Clear, TrendingUp} from './Icons';
+import {Redo, Undo, Clear, TrendingUp} from '../Common/Icons';
 import {LocationSearch} from './LocationSearch';
 import {clearState} from './mapSlice';
 

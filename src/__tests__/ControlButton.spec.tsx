@@ -2,7 +2,7 @@ import {
   ControlButton,
   ControlButtonProps,
 } from '../features/CreatePage/ControlButton';
-import {Redo} from '../features/CreatePage/Icons';
+import {Redo} from '../features/Common/Icons';
 import {render, screen, userEvent} from '../utils/test/test-utils';
 
 const renderButton = ({

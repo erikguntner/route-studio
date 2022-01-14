@@ -18,7 +18,7 @@ export const Header = () => {
         {status === 'loading' ? (
           <div>loading</div>
         ) : status === 'authenticated' ? (
-          <SignOutButton
+          <LightLink
             href="/api/auth/signout"
             onClick={e => {
               e.preventDefault();
@@ -26,7 +26,7 @@ export const Header = () => {
             }}
           >
             Sign Out
-          </SignOutButton>
+          </LightLink>
         ) : (
           <Button onClick={() => signIn('auth0')}>Sign In</Button>
         )}
@@ -51,7 +51,9 @@ const BaseButton = styled.button`
   border-radius: 4px;
   border: none;
   font-size: 16px;
+  font-weight: 600;
   line-height: 1;
+  transition: all 0.2s ease;
 
   &:hover {
     cursor: pointer;
@@ -61,19 +63,32 @@ const BaseButton = styled.button`
 const BaseLink = styled.a`
   padding: 12px 20px;
   border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
   border: none;
+  transition: all 0.2s ease;
 
   &:hover {
     cursor: pointer;
   }
 `;
 
-const SignOutButton = styled(BaseLink)`
+export const FillLink = styled(BaseLink)`
   background-color: ${COLORS.primary};
   color: ${({theme}) => theme.colors.white};
 
   &:hover {
     background-color: ${COLORS.primaryLight};
+  }
+`;
+
+export const LightLink = styled(BaseLink)`
+  background-color: ${({theme}) => theme.colors.blue[50]};
+  color: ${({theme}) => theme.colors.primary};
+
+  &:hover {
+    background-color: ${({theme}) => theme.colors.blue[100]};
+    /* color: ${({theme}) => theme.colors.white}; */
   }
 `;
 
@@ -86,7 +101,7 @@ const Button = styled(BaseButton)`
   }
 `;
 
-const NavLink = styled(BaseLink)`
+export const NavLink = styled(BaseLink)`
   padding: 12px 20px;
   border-radius: 4px;
   color: ${COLORS.gray};
@@ -104,6 +119,8 @@ const Wrapper = styled.header`
   align-items: center;
   height: 66px;
   padding: 0 16px;
+  background-color: ${({theme}) => theme.colors.white};
+  z-index: 100;
 
   & > a {
     margin-right: auto;
