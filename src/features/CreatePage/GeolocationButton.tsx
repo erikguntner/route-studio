@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import toast from 'react-hot-toast';
 import styled from 'styled-components';
 import {Viewport} from './CreatePageMapbox';
-import {Geolocation} from './Icons';
+import {Geolocation} from '../Common/Icons';
 
 interface Props {
   setUserLocation: React.Dispatch<React.SetStateAction<number[] | null>>;

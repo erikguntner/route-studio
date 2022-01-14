@@ -51,6 +51,7 @@ const BaseButton = styled.button`
   border-radius: 4px;
   border: none;
   font-size: 16px;
+  font-weight: 600;
   line-height: 1;
   transition: all 0.2s ease;
 
@@ -63,6 +64,7 @@ const BaseLink = styled.a`
   padding: 12px 20px;
   border-radius: 4px;
   font-size: 16px;
+  font-weight: 600;
   border: none;
   transition: all 0.2s ease;
 
@@ -83,7 +85,6 @@ export const FillLink = styled(BaseLink)`
 export const LightLink = styled(BaseLink)`
   background-color: ${({theme}) => theme.colors.blue[50]};
   color: ${({theme}) => theme.colors.primary};
-  font-weight: 600;
 
   &:hover {
     background-color: ${({theme}) => theme.colors.blue[100]};

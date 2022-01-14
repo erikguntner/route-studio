@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import {FillLink, LightLink} from '../Layout/Header';
 import {Contours} from '../Common/Contours';
+import {Pencil} from '../Common/Icons';
 
 export const HomePage = () => {
   return (
@@ -11,6 +12,9 @@ export const HomePage = () => {
         <Contours />
       </ContoursContainer>
       <Hero>
+        <Icon>
+          <Pencil />
+        </Icon>
         <Title>Route Studio</Title>
         <Subtitle>Create and share ways to exlpore the outside world</Subtitle>
         <Row>
@@ -28,6 +32,21 @@ export const HomePage = () => {
 
 const Hero = styled.section`
   padding: 8rem 0 4rem 0;
+`;
+
+const Icon = styled.div`
+  height: 5rem;
+  width: 5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: ${({theme}) => theme.colors.primary};
+  border-radius: 0.5rem;
+  color: ${({theme}) => theme.colors.white};
+
+  & > svg {
+    height: 4rem;
+  }
 `;
 
 const Container = styled.div`
